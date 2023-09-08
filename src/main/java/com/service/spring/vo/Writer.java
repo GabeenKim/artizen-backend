@@ -3,6 +3,8 @@ package com.service.spring.vo;
 
 
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,6 @@ public class Writer {
 	private int writerId;
 	
 	private UserInfo userInfo;
-	
+	List<Contents> contents;
 	
 }
