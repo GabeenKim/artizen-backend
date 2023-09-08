@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.ticket.mapper">	
+
+	<select id="showMyTickets" parameterType="user" resultType="HashMap">
+		SELECT
+		t.ticket_id, c.content_name, c.start_day, c.end_day
+		FROM contents c
+		JOIN ticket t ON(c.content_id=t.content_id)
+		WHERE t.user_id = #{userId}
+	</select>
+		
+	<update id="sendTicket" parameterType="hashmap">
+		UPDATE ticket 
+		set user_id = #{receiveUserId} 
+		WHERE user_id = #{sendUserId} AND ticket_id = #{ticketId}
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
