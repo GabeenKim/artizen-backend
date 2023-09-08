@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+<mapper namespace="ns.sql.support.mapper">	
+
+	<resultMap type="Support" id="supportSelectMap">
+		 <id property= "supportId" column= "support_id"/>
+		 <result property="price" column="price"/>
+		 <result property="contentId" column="content_id"/>
+		 <result property="userId" column="user_id"/>
+	</resultMap>
+
+
+	<resultMap type="Contents" id="contentSelectMap">
+	    <id property="contentId" column="content_id"/>
+	    <result property="contentName" column="content_name"/>
+	    <result property="endDay" column="end_day"/>
+	    <result property="contentSum" column="content_sum"/>      
+	    <result property="target" column="target"/>      
+		    <association property="support" javaType="support">
+		        <id property= "supportId" column= "support_id"/>
+		        <result property="userId" column="user_id"/>      
+		    </association>
+		    <association property= "image" javaType = "image">
+		         <id property= "imageId" column =  "image_id"/>
+		         <result property=  "imageUrl" column =" image_url"/>
+		         <result property ="imageName" column =" image_name"/>
+		     </association>
+	</resultMap>
+	
+	<!-- content에 있는 sum 보기 -->
+	<resultMap type="Contents" id="supportWithContent">
+		<id property="contentId" column="content_id"/>
+		<result property="contentSum" column="content_sum"/>		
+		<association property="support" javaType="support">
+			<id property="supportId" column="support_id"/>		
+		</association>
+	</resultMap>
+	
+
+	<insert id="addFunding" parameterType="support">
+		INSERT 
+		INTO support(support_id, price, content_id, user_id )
+		VALUES(#{supportId},#{price},#{contentId},#{userId})
+		
+	</insert>
+	
+	<delete id="deleteFunding" parameterType="list">
+		DELETE 
+		FROM support
+		WHERE support_id=#{VALUE}
+	</delete>
+	
+	<select id="showFunding" parameterType="support" resultType="map">
+			SELECT 
+			    c.content_id, 
+			    c.content_name,
+			    c.end_day,
+			    c.content_sum,
+			    c.target,
+			    s.support_id,
+			    s.user_id,
+			    i.image_id,
+				i.image_url,
+				i.image_name
+			FROM (
+				SELECT 
+					image_id, 
+					image_url, 
+					image_name, 
+					content_id,  
+					ROW_NUMBER() OVER(PARTITION BY content_id ORDER BY image_id) as rn
+				FROM image
+					) i RIGHT JOIN contents c ON (i.content_id = c.content_id AND i.rn = 1)
+			JOIN support s ON (c.content_id = s.content_id)  
+			WHERE s.user_id=#{userId}
+	</select>
+	
+	<select id="showFundingUser" parameterType="int" resultMap="supportSelectMap">
+		SELECT support_id, price, content_id, user_id
+		FROM support
+		WHERE content_id=#{VALUE}
+	</select>
+	
+	
+ 	<select id="showSupportRank" resultMap="supportWithContent">
+		SELECT c.content_id, c.content_sum 
+		FROM contents c
+		JOIN support s ON c.content_id = s.content_id
+		ORDER BY c.content_sum DESC
+		FETCH FIRST 5 ROWS ONLY
+	</select> 
+	
+	<select id="showFundingDetail" resultMap="supportSelectMap">
+		SELECT *
+		FROM support
+		WHERE support_id=#{supportId}
+		
+	</select>
+
+<!-- 
+	<update id="notSatisfied" parameterType="int">
+	  UPDATE support
+	  SET status = 'REFUNDED'
+	  WHERE support_id = #{supportId} AND status = 'ACTIVE'
+	</update>
+	
+	<select id="selectUser" parameterType="userInfo" resultType="userInfo">
+		SELECT id, pw
+		FROM userinfo
+		WHERE id=#{id}
+		<if test="pw!=null">
+			AND pw=#{pw}
+		</if>
+	</select>
+	vo 결과타입 
+	<resultMap type="phone" id="phonewithCompany">
+		<id column="num" property="num"/>
+		<result column="model" property="model"/>
+		<result column="price" property="price"/>
+		<result column="vcode" property="vcode"/>
+		<association property="company" javaType="company">
+			<id column="vcode" property="vcode"/>
+			<result column="vendor" property="vendor"/>
+		</association>
+	</resultMap>
+	모든 폰 조회하기 & 특정 폰 조회하기 까지 가능한 동적쿼리로 작성 :: JOIN 사용 됨
+	SqlSession(sqlSessionTemplate) :: selectList(), selectOne() 
+	<select id="select" parameterType="phone" resultMap="phonewithCompany">
+		SELECT 
+		p.num, p.model, p.price, p.vcode, c.vendor
+		FROM phones p
+		JOIN company c ON(p.vcode = c.vcode)
+		 <if test="num!=null"> 특정폰 조회하기
+			WHERE num=#{num}	num에 값을 넣으면	 	
+		 </if>
+		
+	</select>
+	
+	
+	<delete id="delete" parameterType="list">
+		DELETE 
+		FROM phones
+		WHERE num in 
+		<foreach collection="list" item="num" open="(" close=")" separator=",">
+			#{num}
+		</foreach>
+	</delete>
+	Restcontroller 추가 부분
+	<update id="update" parameterType="phone">
+	    UPDATE phones
+	    SET model=#{model}, price=#{price}, vcode=#{vcode}
+	    WHERE num=#{num}
+	</update>
+	 -->
+</mapper>
