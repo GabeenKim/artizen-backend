@@ -1,5 +1,34 @@
 package com.service.spring.dao;
 
-public interface UserDAO {
+import java.util.HashMap;
 
+import com.service.spring.vo.User;
+import com.service.spring.vo.UserInfo;
+import com.service.spring.vo.Writer;
+
+public interface UserDAO {
+	User select(User user); 
+	
+	int register(UserInfo userInfo); 
+	int register(User user);
+	int register(Writer writer); 
+	
+	String isExist(String email); //회원정보 불러오기
+	int showIdentity(int infoId); //권한 확인
+	
+	UserInfo login(UserInfo userInfo);
+	User showUser(int infoId);
+	Writer showWriter(int infoId);
+	
+	int updateUser(User user);
+	int updateUserInfo(UserInfo userInfo);
+	int registerCharacter(HashMap<String, Object> map);
+	
+	int addAccount(HashMap<String, Object> map);
+	int updateAccount(HashMap<String, Object> map); 
+	int deleteAccount(int infoId);
+	
+	int getUserInfoSeq();
+	int getUsersSeq();
+	int getWriterSeq();
 }
