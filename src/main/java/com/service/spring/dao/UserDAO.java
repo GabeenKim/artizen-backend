@@ -7,8 +7,7 @@ import com.service.spring.vo.UserInfo;
 import com.service.spring.vo.Writer;
 
 public interface UserDAO {
-	User select(User user); 
-	
+
 	int register(UserInfo userInfo); 
 	int register(User user);
 	int register(Writer writer); 
@@ -31,4 +30,7 @@ public interface UserDAO {
 	int getUserInfoSeq();
 	int getUsersSeq();
 	int getWriterSeq();
+	
+	int getUserId(int infoId);
+	int getWriterId(int infoId);
 }

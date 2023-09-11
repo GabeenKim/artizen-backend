@@ -97,7 +97,10 @@
 	</update>
 	<update id="updateUserInfo" parameterType="userInfo">
 		UPDATE user_info
-		SET name=#{name}, nickname=#{nickname}, password=#{password}
+		SET name=#{name}, nickname=#{nickname} 
+		<if test="password != null">
+		,password=#{password}
+		</if>
 		WHERE info_id=#{infoId}
 	</update>
 	
@@ -137,5 +140,18 @@
 	</select>
 	<select id="getWriterSeq" resultType="int">
 		SELECT writer_seq.nextVal FROM dual
+	</select>
+	
+	
+	<!-- userId, writerId 받아오기 -->
+	<select id="getUserId" parameterType="int" resultType="int">
+		SELECT u.user_id
+		FROM users u JOIN user_info i ON (u.info_id = i.info_id)
+		WHERE u.info_id = #{VALUE}
+	</select>
+	<select id="getWriterId" parameterType="int" resultType="int">
+		SELECT w.writer_id
+		FROM writer w JOIN user_info i ON (w.info_id = i.info_id)
+		WHERE w.info_id = #{VALUE}
 	</select>
 </mapper>
