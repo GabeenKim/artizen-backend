@@ -12,15 +12,12 @@
 		<package name="com.service.spring.vo"/>
 	</typeAliases>
 	
-	
 	<mappers>		
-<<<<<<< Updated upstream
 		<mapper resource="mapper/ticket-query.xml"/>
 		<mapper resource="mapper/review-query.xml"/>	
-=======
 		<mapper resource="mapper/user-query.xml"/>	
->>>>>>> Stashed changes
 	</mappers>
+
 </configuration>
  
  
