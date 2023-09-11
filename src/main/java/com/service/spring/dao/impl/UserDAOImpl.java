@@ -20,12 +20,6 @@ public class UserDAOImpl implements UserDAO{
 	public static final String NS = "sql.user.mapper.";
 	
 	@Override
-	public User select(User user) {
-		
-		return null;
-	}
-
-	@Override
 	public int register(UserInfo userInfo) {
 		return sqlSession.insert(NS+"registerInfo", userInfo);
 	}
@@ -109,6 +103,16 @@ public class UserDAOImpl implements UserDAO{
 	@Override
 	public int getWriterSeq() {
 		return sqlSession.selectOne(NS+"getWriterSeq");
+	}
+
+	@Override
+	public int getUserId(int infoId) {
+		return sqlSession.selectOne(NS+"getUserId", infoId);
+	}
+
+	@Override
+	public int getWriterId(int infoId) {
+		return sqlSession.selectOne(NS+"getWriterId", infoId);
 	}
 
 }
