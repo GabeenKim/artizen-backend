@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.user.mapper">	
+	<insert id="registerInfo" parameterType="userInfo">
+		INSERT
+		INTO user_info (info_id, name, password, email, balance)
+		VALUES (#{infoId}, #{name}, #{password}, #{email}, 0)
+	</insert>
+	
+	<insert id="registerWriter" parameterType="writer">
+		INSERT
+		INTO writer (writer_id, info_id)
+		VALUES (#{writerId}, #{userInfo.infoId})
+	</insert>
+	
+	<insert id="registerUser" parameterType="user">
+		INSERT
+		INTO users (user_id, identity, info_id)
+		VALUES (#{userId}, #{identity}, #{userInfo.infoId})
+	</insert>
+	
+	<select id="isExist" parameterType="String" resultType="String">
+		SELECT email
+		FROM user_info
+		WHERE email = #{VALUE}
+	</select>
+	
+	<select id="login" parameterType="userInfo" resultType="userInfo">
+		SELECT info_id as infoId, name, nickname
+		FROM user_info
+		WHERE email=#{email} and password=#{password}
+	</select>
+	
+	<select id="showIdentity" parameterType="int" resultType="int">
+		SELECT CASE WHEN identity IS NULL THEN 2 ELSE identity END AS identity
+		FROM users
+		WHERE info_id = #{VALUE}
+		
+		UNION ALL
+		
+		SELECT 2 AS identity
+		FROM dual
+		WHERE NOT EXISTS (
+		    SELECT identity FROM users WHERE info_id = #{VALUE}
+		)
+	</select>
+	
+	<resultMap type="user" id="userWithInfo">
+		<id column="user_id" property="userId"/>
+		<result column="identity" property="identity"/>
+		<result column="character" property="character"/>
+		<result column="interests" property="interests"/>
+		<association property="userInfo" javaType="userInfo">
+			<id column="info_id" property="infoId"/>
+			<result column="name" property="name"/>		
+			<result column="nickname" property="nickname"/>			
+			<result column="email" property="email"/>			
+			<result column="accounts" property="accounts"/>			
+			<result column="bank" property="bank"/>			
+			<result column="balance" property="balance"/>			
+		</association>		
+	</resultMap>
+	<select id="showUser" parameterType="int" resultMap="userWithInfo">
+		SELECT
+		u.user_id, u.identity, u.character, u.interests, u.info_id, i.name, i.nickname, i.email, i.accounts, i.bank, i.balance
+		FROM users u
+		JOIN user_info i ON (u.info_id=i.info_id)
+		WHERE i.info_id = #{VALUE}
+	</select>
+
+	<resultMap type="writer" id="writerWithInfo">
+		<id column="writer_id" property="writerId"/>
+		<association property="userInfo" javaType="userInfo">
+			<id column="info_id" property="infoId"/>
+			<result column="name" property="name"/>		
+			<result column="nickname" property="nickname"/>			
+			<result column="email" property="email"/>			
+			<result column="accounts" property="accounts"/>			
+			<result column="bank" property="bank"/>			
+			<result column="balance" property="balance"/>			
+		</association>		
+	</resultMap>
+	<select id="showWriter" parameterType="int" resultMap="writerWithInfo">
+		SELECT
+		w.writer_id, w.info_id, i.name, i.nickname, i.email, i.accounts, i.bank, i.balance
+		FROM writer w
+		JOIN user_info i ON (w.info_id=i.info_id)
+		WHERE i.info_id = #{VALUE}
+	</select>
+	
+	<update id="updateUser" parameterType="user">
+		UPDATE users
+		SET character = #{character}, interests = #{interests}
+		WHERE user_id=#{userId}
+	</update>
+	<update id="updateUserInfo" parameterType="userInfo">
+		UPDATE user_info
+		SET name=#{name}, nickname=#{nickname} 
+		<if test="password != null">
+		,password=#{password}
+		</if>
+		WHERE info_id=#{infoId}
+	</update>
+	
+	<update id="addAccount" parameterType="hashmap">
+	    UPDATE user_info
+	    SET accounts = #{accounts}, bank= #{bank}
+	    WHERE info_id = #{infoId}
+	</update>
+	    
+	<!-- 충전하기  :: A8  -->
+	<update id="updateAccount" parameterType="hashmap">
+	    UPDATE user_info
+	    SET balance = balance + #{amount}
+	    WHERE info_id = #{infoId}
+	</update>
+	
+	<!-- 계좌 삭제하기 :: A9 -->
+	<update id="deleteAccount" parameterType="int">
+	    UPDATE user_info
+	    SET accounts = null, bank = null
+	    WHERE info_id = #{VALUE}
+	</update>
+	
+	<update id="registerCharacter" parameterType="hashmap">
+		UPDATE users
+		SET character = #{character}
+		WHERE user_id = #{userId}
+	</update>
+	
+	
+	<!-- sequence 받아오기 -->
+	<select id="getUserInfoSeq" resultType="int">
+		SELECT user_info_seq.nextVal FROM dual
+	</select>
+	<select id="getUsersSeq" resultType="int">
+		SELECT users_seq.nextVal FROM dual
+	</select>
+	<select id="getWriterSeq" resultType="int">
+		SELECT writer_seq.nextVal FROM dual
+	</select>
+	
+	
+	<!-- userId, writerId 받아오기 -->
+	<select id="getUserId" parameterType="int" resultType="int">
+		SELECT u.user_id
+		FROM users u JOIN user_info i ON (u.info_id = i.info_id)
+		WHERE u.info_id = #{VALUE}
+	</select>
+	<select id="getWriterId" parameterType="int" resultType="int">
+		SELECT w.writer_id
+		FROM writer w JOIN user_info i ON (w.info_id = i.info_id)
+		WHERE w.info_id = #{VALUE}
+	</select>
+</mapper>

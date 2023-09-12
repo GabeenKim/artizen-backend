@@ -19,6 +19,7 @@ public class Writer {
 	private int writerId;
 	
 	private UserInfo userInfo;
+
 	private List<Contents> contents;
 	
 }

@@ -19,7 +19,7 @@ public class User {
 	private String interests;   //List 할지말지
 	
 	private UserInfo userInfo;
-	private Support support;
-	private Reviews reviews;
-	private Ticket ticket;
+	private List<Support> support;
+	private List<Reviews> reviews;
+	private List<Ticket> ticket;
 }

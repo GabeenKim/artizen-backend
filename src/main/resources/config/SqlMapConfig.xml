@@ -12,10 +12,18 @@
 		<package name="com.service.spring.vo"/>
 	</typeAliases>
 	
+
 	
 	<mappers>		
 		<mapper resource="mapper/contents-query.xml"/>	
 	</mappers>
+
+	<mappers>		
+		<mapper resource="mapper/ticket-query.xml"/>
+		<mapper resource="mapper/review-query.xml"/>	
+		<mapper resource="mapper/user-query.xml"/>	
+	</mappers>
+
 </configuration>
  
  

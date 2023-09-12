@@ -27,10 +27,11 @@ public class Contents {
 	private int likes;
 	private int isAccepted;
 	private int writerId;
-	
+
 	private List<Image> images;
 	private List<Support> support;
 	private List<Reviews> review;
+	private List<Reviews> reviews;
 	private FundingContents fundingContents;
 	private SupportContents supportContents;
 	private List<Gift> gifts;
