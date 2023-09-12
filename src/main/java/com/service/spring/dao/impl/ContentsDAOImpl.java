@@ -99,4 +99,19 @@ public class ContentsDAOImpl implements ContentsDAO{
 		return sqlSession.selectOne(NS + "showSupportContentsDetail", scId );
 	}
 
+	@Override
+	public int addAdminContents(int contentId) throws Exception {
+		return sqlSession.update(NS + "addAdminContents", contentId);
+	}
+	
+	@Override
+	public List<Contents> showAllSupportContents() throws Exception {
+	    return sqlSession.selectList(NS + "showAllSupportContents");
+	}
+
+	@Override
+	public List<Contents> showAllFundingContents() throws Exception {
+	    return sqlSession.selectList(NS + "showAllFundingContents");
+	}
+
 }

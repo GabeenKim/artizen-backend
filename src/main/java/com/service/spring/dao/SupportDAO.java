@@ -20,5 +20,5 @@ public interface SupportDAO {
 	
 	List <Contents> showSupportRank(); //후원랭킹 보여주기
 	
-	
+
 }

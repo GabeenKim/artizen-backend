@@ -1,19 +1,14 @@
-package com.service.spring.dao;
+package com.service.spring.service;
 
 import java.util.List;
 
+import com.service.spring.dto.ContentIdRequestDTO;
 import com.service.spring.vo.Contents;
-import com.service.spring.vo.FundingContents;
-import com.service.spring.vo.SupportContents;
 
-public interface ContentsDAO {
+
+public interface ContentsService {
 	int addContents(Contents contents)throws Exception;
-	
-	int addAdminContents(int contentId)throws Exception;
-    int addSupportContents(SupportContents supportContents) throws Exception;
-    int addFundingContents(FundingContents fundingContents) throws Exception;
-    int updateSupportContents(SupportContents supportContents) throws Exception;
-    int updateFundingContents(FundingContents fundingContents) throws Exception;
+	int addAdminContents(int contentId) throws Exception;
 	int updateContents(Contents contents) throws Exception;
 	int deleteContents(int contentId) throws Exception;
 	
@@ -28,7 +23,11 @@ public interface ContentsDAO {
 	List<Contents> showNotableContents() throws Exception;
 	List<Contents> showContentsRank() throws Exception;
 	
+	List<Contents> showEndedContents() throws Exception;
+	List<Contents> showCustomizedContents() throws Exception;
+
 	List<Contents> showAllSupportContents() throws Exception;
 	List<Contents> showAllFundingContents() throws Exception;
+
 
 }
