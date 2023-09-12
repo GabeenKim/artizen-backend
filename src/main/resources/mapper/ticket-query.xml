@@ -6,7 +6,7 @@
 
 	<select id="showMyTickets" parameterType="user" resultType="HashMap">
 		SELECT
-		t.ticket_id, c.content_name, c.start_day, c.end_day
+		t.ticket_id AS ticketId, c.content_name AS contentName, c.start_day AS startDay, c.end_day AS endDay
 		FROM contents c
 		JOIN ticket t ON(c.content_id=t.content_id)
 		WHERE t.user_id = #{userId}
