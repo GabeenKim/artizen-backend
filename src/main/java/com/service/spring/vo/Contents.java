@@ -25,14 +25,17 @@ public class Contents {
 	private Date startDay;
 	private Date endDay;
 	private int likes;
-	private boolean isAccepted;
+	private int isAccepted;
+	private int writerId;
 	
 	private List<Image> images;
-	private Support support;
-	private Reviews review;
+	private List<Support> support;
+	private List<Reviews> review;
 	private FundingContents fundingContents;
 	private SupportContents supportContents;
 	private List<Gift> gifts;
+	
+	
 	
 	
 	

@@ -17,4 +17,15 @@ public class SupportContents {
 	private String planDetail;
 	
 	private int contentId;
+
+//	public SupportContents(int scId, String detail, String teamDetail, String planDetail, int contentId) {
+//		super();
+//		this.scId = scId;
+//		this.detail = detail;
+//		this.teamDetail = teamDetail;
+//		this.planDetail = planDetail;
+//		this.contentId = contentId;
+//	}
+	
+	
 }

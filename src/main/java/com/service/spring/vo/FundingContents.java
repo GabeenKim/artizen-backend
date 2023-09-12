@@ -21,4 +21,11 @@ public class FundingContents {
 	
 	private int contentId;
 
+	@Override
+	public String toString() {
+		return "FundingContents [fundingId=" + fundingId + ", detail=" + detail + ", transaction=" + transaction
+				+ ", productionCost=" + productionCost + ", purpose=" + purpose + ", minInvest=" + minInvest
+				+ ", contentId=" + contentId + "]";
+	}
+	
 }

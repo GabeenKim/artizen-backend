@@ -18,5 +18,6 @@ public class Support {
 	
 	private int userId;
 	private int contentId;
+	
 
 }
