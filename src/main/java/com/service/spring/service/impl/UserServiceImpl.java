@@ -119,7 +119,14 @@ public class UserServiceImpl implements UserService{
 		return userDAO.deleteAccount(infoId);
 	}
 
+	@Override
+	public int getUserId(int infoId) {
+		return userDAO.getUserId(infoId);
+	}
 
-	
+	@Override
+	public int getWriterId(int infoId) {
+		return userDAO.getWriterId(infoId);
+	}
 
 }
