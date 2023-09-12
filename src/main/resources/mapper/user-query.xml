@@ -103,6 +103,11 @@
 		</if>
 		WHERE info_id=#{infoId}
 	</update>
+	<update id="updateUserNickname" parameterType="userInfo">
+		UPDATE user_info
+		SET nickname=#{nickname} 
+		WHERE info_id=#{infoId}
+	</update>
 	
 	<update id="addAccount" parameterType="hashmap">
 	    UPDATE user_info

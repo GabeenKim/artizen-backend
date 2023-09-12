@@ -9,7 +9,7 @@
 	</settings>
 
 	<typeAliases>
-		<package name="com.service.spring.vo"/>
+		<package name="com.service.spring.vo,com.service.spring.dto"/>
 	</typeAliases>
 
 	<mappers>

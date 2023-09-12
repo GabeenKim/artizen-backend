@@ -16,8 +16,11 @@ public interface UserService {
 	User showUser(int infoId);
 	Writer showWriter(int infoId);
 	
-	User updateUser(UserInfo userInfo, User user);
-	Writer updateWriter(UserInfo userInfo);
+//	User updateUser(UserInfo userInfo, User user);//
+//	Writer updateWriter(UserInfo userInfo);//
+	
+	UserInfo updateUser(UserInfo userInfo);
+	UserInfo updateNickname(UserInfo userInfo);
 	int registerCharacter(HashMap<String, Object> map);	//int userId, String character
 	
 	int addAccount(HashMap<String, Object> map); /** int infoId, String accounts, String bank*/

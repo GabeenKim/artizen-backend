@@ -72,27 +72,27 @@ public class UserServiceImpl implements UserService{
 		return userDAO.showWriter(infoId);
 	}
 
-	@Override
-	public User updateUser(UserInfo userInfo, User user) {
-		userDAO.updateUserInfo(userInfo);
-		user.setUserInfo(userInfo);
-		System.out.println(userInfo.getInfoId());
-		int userId = userDAO.getUserId(userInfo.getInfoId());
-		user.setUserId(userId);
-		userDAO.updateUser(user);
-		
-		return user;
-	}
+//	@Override
+//	public User updateUser(UserInfo userInfo, User user) {
+//		userDAO.updateUserInfo(userInfo);
+//		user.setUserInfo(userInfo);
+//		System.out.println(userInfo.getInfoId());
+//		int userId = userDAO.getUserId(userInfo.getInfoId());
+//		user.setUserId(userId);
+//		userDAO.updateUser(user);
+//		
+//		return user;
+//	}
 
-	@Override
-	public Writer updateWriter(UserInfo userInfo) {
-		userDAO.updateUserInfo(userInfo);
-		int writerId = userDAO.getWriterId(userInfo.getInfoId());
-		Writer writer = new Writer();
-		writer.setUserInfo(userInfo);
-		writer.setWriterId(writerId);
-		return writer;
-	}
+//	@Override
+//	public Writer updateWriter(UserInfo userInfo) {
+//		userDAO.updateUserInfo(userInfo);
+//		int writerId = userDAO.getWriterId(userInfo.getInfoId());
+//		Writer writer = new Writer();
+//		writer.setUserInfo(userInfo);
+//		writer.setWriterId(writerId);
+//		return writer;
+//	}
 
 	@Override
 	public int registerCharacter(HashMap<String, Object> map) {
@@ -127,6 +127,24 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int getWriterId(int infoId) {
 		return userDAO.getWriterId(infoId);
+	}
+
+	@Override
+	public UserInfo updateUser(UserInfo userInfo) {
+		int result = userDAO.updateUserInfo(userInfo);
+		if(result != 0) {
+			return userInfo;
+		}
+		return null;
+	}
+
+	@Override
+	public UserInfo updateNickname(UserInfo userInfo) {
+		int result = userDAO.updateUserNickname(userInfo);
+		if(result != 0) {
+			return userInfo;
+		}
+		return null;
 	}
 
 }
