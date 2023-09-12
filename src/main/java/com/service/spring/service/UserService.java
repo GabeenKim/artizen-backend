@@ -23,4 +23,7 @@ public interface UserService {
 	int addAccount(HashMap<String, Object> map); /** int infoId, String accounts, String bank*/
 	int updateAccount(HashMap<String, Object> map); //int infoId, int amount
 	int deleteAccount(int infoId);
+	
+	int getUserId(int infoId);
+	int getWriterId(int infoId);
 }
