@@ -11,8 +11,33 @@
 		 <result property="contentId" column="content_id"/>
 		 <result property="userId" column="user_id"/>
 	</resultMap>
-
-
+	
+	<resultMap type="user" id="userWithPrice">
+		<id column="user_id" property="userId"/>
+		<result column="identity" property="identity"/>
+		<result column="character" property="character"/>
+		<result column="interests" property="interests"/>
+		<association property="userInfo" javaType="userInfo">
+			<id column="info_id" property="infoId"/>
+			<result column="name" property="name"/>		
+			<result column="nickname" property="nickname"/>			
+			<result column="email" property="email"/>			
+			<result column="accounts" property="accounts"/>			
+			<result column="bank" property="bank"/>			
+			<result column="balance" property="balance"/>			
+		</association>		
+		<collection property="support" resultMap="supportWithUser"/>
+	</resultMap>
+	
+	
+	<resultMap type="Support" id="supportWithUser">
+		 <id property= "supportId" column= "support_id"/>
+		 <result property="price" column="price"/>
+		 <result property="contentId" column="content_id"/>
+ 		<result property="userId" column="user_id"/>
+	</resultMap>
+	
+		
 	<resultMap type="Contents" id="contentSelectMap">
 	    <id property="contentId" column="content_id"/>
 	    <result property="contentName" column="content_name"/>
@@ -85,12 +110,17 @@
 	</select>
 	
 	
- 	<select id="showSupportRank" resultMap="supportWithContent">
-		SELECT c.content_id, c.content_sum 
-		FROM contents c
-		JOIN support s ON c.content_id = s.content_id
-		ORDER BY c.content_sum DESC
-		FETCH FIRST 5 ROWS ONLY
+ 	<select id="showSupportRank" resultMap="userWithPrice">
+		select i.name, sum(j.price) as price
+		from user_info i
+		join(
+		select u.user_id, s.price, u.info_id
+		from users u join support s
+		on(u.user_id = s.user_id)
+		) j
+		on( i.info_id = j.info_id)
+		group by i.name 
+		order by price DESC
 	</select> 
 	
 	<select id="showFundingDetail" resultMap="supportSelectMap">
@@ -99,6 +129,14 @@
 		WHERE support_id=#{supportId}
 		
 	</select>
+	
+<select id="showfundingList" parameterType="int" resultMap="supportSelectMap">
+	SELECT content_id, sum(price) as price, user_id
+	FROM support
+	group by content_id,user_id
+		WHERE content_id=#{VALUE}
+	
+	</select> 
 
 <!-- 
 	<update id="notSatisfied" parameterType="int">

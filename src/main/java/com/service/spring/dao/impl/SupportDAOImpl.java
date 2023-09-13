@@ -11,6 +11,7 @@ import com.service.spring.dao.SupportDAO;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.Support;
 import com.service.spring.vo.User;
+import com.service.spring.vo.UserInfo;
 
 @Repository
 public class SupportDAOImpl implements SupportDAO {
@@ -44,7 +45,7 @@ public class SupportDAOImpl implements SupportDAO {
 	}
 
 	@Override
-	public List<User> showFundingUser(int contentId) {
+	public List<Support> showFundingUser(int contentId) {
 		return sqlSession.selectList(NS+"showFundingUser", contentId);
 	}
 
@@ -61,8 +62,18 @@ public class SupportDAOImpl implements SupportDAO {
 	}
 
 	@Override
-	public List<Contents> showSupportRank() {
-		return sqlSession.selectList(NS+"showSupportRank");
+	public  List<Support> showSupportRank() {
+		List<Support> list = sqlSession.selectList(NS+"showSupportRank");
+		System.out.println(list);
+		return	sqlSession.selectList(NS+"showSupportRank");
+	
 	}
+
+	@Override
+	public List<Support> showFundingList(int contentId) {
+		return sqlSession.selectList(NS+"showFundingList",contentId);
+	}
+	
+	
 
 }
