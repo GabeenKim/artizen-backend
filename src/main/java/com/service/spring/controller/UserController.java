@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping("account/login")
+	@PostMapping("/account/login")
 	public ResponseEntity login(@RequestBody UserInfo userInfo) {
 //		System.out.println(userInfo);
 
@@ -56,14 +57,15 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("account/registerUser")
+	@PostMapping("/account/registerUser")
 	public ResponseEntity register(@RequestBody RegisterDTO registerDTO) {
 		try{
 			UserInfo userInfo = new UserInfo();
 			userInfo.setEmail(registerDTO.getEmail());
 			userInfo.setName(registerDTO.getName());
 			userInfo.setPassword(registerDTO.getPassword());
-			
+			userInfo.setNickname(registerDTO.getNickname());
+
 			if(registerDTO.getIdentity()==1) { //유저
 				User loginUser = userService.registerUser(userInfo);
 				return new ResponseEntity(loginUser, HttpStatus.OK);
@@ -82,7 +84,9 @@ public class UserController {
 	@GetMapping("/account/showUser/{infoId}")
 	public ResponseEntity showUser(@PathVariable int infoId) {
 		try {
+//			System.out.println(infoId);
 			int identity = userService.showIdentity(infoId);
+//			System.out.println(identity);
 			if(identity==1) { //유저
 				User userReturn = userService.showUser(infoId);
 				return new ResponseEntity(userReturn, HttpStatus.OK);
@@ -115,7 +119,9 @@ public class UserController {
 		try {
 			UserInfo userReturn = userService.updateNickname(userInfo);
 			if(userReturn != null) {
-				return new ResponseEntity(userReturn.getNickname(), HttpStatus.OK);
+				HashMap<String, Object> result = new HashMap<>();
+				result.put("nickname", userReturn.getNickname());
+				return new ResponseEntity(result, HttpStatus.OK);
 			}else {
 				return new ResponseEntity(HttpStatus.NO_CONTENT);
 			}
@@ -127,7 +133,12 @@ public class UserController {
 	@PostMapping("/account/addAccount")
 	public ResponseEntity addAccount(@RequestBody HashMap<String, Object> param) {
 		try {
-			return new ResponseEntity(userService.addAccount(param), HttpStatus.OK);
+			int result = userService.addAccount(param);
+			if(result != 0) {
+				return new ResponseEntity(HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			}
 		}catch(Exception e) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
@@ -147,8 +158,8 @@ public class UserController {
 		}
 	}
 	
-	@PatchMapping("/account/deleteAccount")
-	public ResponseEntity deleteAccount(@RequestBody int infoId) {
+	@DeleteMapping("/account/deleteAccount/{infoId}")
+	public ResponseEntity deleteAccount(@PathVariable int infoId) {
 		try {
 			int result = userService.deleteAccount(infoId);
 			if(result != 0) {
@@ -157,6 +168,22 @@ public class UserController {
 				return new ResponseEntity(HttpStatus.NO_CONTENT);
 			}
 		}catch(Exception e) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@GetMapping("/account/isExist/{email}")
+	public ResponseEntity isExist(@PathVariable String email) {
+		try {
+//			System.out.println(email);
+			String result = userService.isExist(email);
+			if(result == null) {
+				return new ResponseEntity(HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			}
+		}catch(Exception e) {
+//			System.out.println(e);
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 	}
