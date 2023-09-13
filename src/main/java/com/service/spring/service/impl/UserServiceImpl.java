@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService{
 		User user = new User();
 		user.setUserInfo(userInfo);
 		user.setUserId(userSeq);
-		
+		user.setIdentity(1);
 		userDAO.register(user);
 		return user;
 	}

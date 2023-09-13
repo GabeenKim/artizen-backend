@@ -5,8 +5,8 @@
 <mapper namespace="sql.user.mapper">	
 	<insert id="registerInfo" parameterType="userInfo">
 		INSERT
-		INTO user_info (info_id, name, password, email, balance)
-		VALUES (#{infoId}, #{name}, #{password}, #{email}, 0)
+		INTO user_info (info_id, name, password, email, nickname, balance)
+		VALUES (#{infoId}, #{name}, #{password}, #{email}, #{nickname}, 0)
 	</insert>
 	
 	<insert id="registerWriter" parameterType="writer">
