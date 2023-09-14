@@ -11,7 +11,6 @@ import com.service.spring.dao.SupportDAO;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.Support;
 import com.service.spring.vo.User;
-import com.service.spring.vo.UserInfo;
 
 @Repository
 public class SupportDAOImpl implements SupportDAO {
@@ -27,10 +26,11 @@ public class SupportDAOImpl implements SupportDAO {
 	}
 
 	@Override
-	public int deleteFunding(String supportId) {
+	public int deleteFunding(int supportId) {
 		int result = sqlSession.delete(NS+"deleteFunding", supportId);
 		return result;
 	}
+	
 
 	//selectOne으로 ..
 	@Override
@@ -62,18 +62,15 @@ public class SupportDAOImpl implements SupportDAO {
 	}
 
 	@Override
-	public  List<Support> showSupportRank() {
-		List<Support> list = sqlSession.selectList(NS+"showSupportRank");
-		System.out.println(list);
-		return	sqlSession.selectList(NS+"showSupportRank");
-	
+	public List<Support> showSupportRank() {
+		return sqlSession.selectList(NS+"showSupportRank");
 	}
 
 	@Override
-	public List<Support> showFundingList(int contentId) {
-		return sqlSession.selectList(NS+"showFundingList",contentId);
+	public int deleteFundingByContentId(int contentId) {
+		return sqlSession.delete(NS + "deleteFundingByContentId");
 	}
-	
+
 	
 
 }

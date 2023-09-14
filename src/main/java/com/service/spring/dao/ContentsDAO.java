@@ -23,6 +23,7 @@ public interface ContentsDAO {
 	
 	List<Contents> findContentsByCreator(String name) throws Exception;
 	Contents findContentsByName(String contentName) throws Exception; 
+	Contents findContentsById(int contentId) throws Exception;
 	List<Contents> showMyContents(int userId) throws Exception;
 	List<Contents> showAdminContents(int isAccepted) throws Exception;
 	List<Contents> showNotableContents() throws Exception;

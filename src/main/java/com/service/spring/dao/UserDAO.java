@@ -18,6 +18,7 @@ public interface UserDAO {
 	UserInfo login(UserInfo userInfo);
 	User showUser(int infoId);
 	Writer showWriter(int infoId);
+	User showUserById(int userId);
 	
 //	int updateUser(User user);
 	int updateUserInfo(UserInfo userInfo);
