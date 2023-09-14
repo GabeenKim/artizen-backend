@@ -59,7 +59,7 @@ public class SupportController {
 		return supportService.notSatisfied(contentId);
 	}
 	
-	@GetMapping("/community/showSupportRank")
+	@GetMapping("/showSupportRank")
     public List<Support> showSupportRank() throws Exception{
         return supportService.showSupportRank();   
     }
@@ -67,6 +67,11 @@ public class SupportController {
 	@GetMapping("/showFunding/{userId}")
 	public List<Map<String, Contents>> showFunding(@PathVariable int userId) throws Exception{
 		return supportService.showFunding(userId);
+	}
+	
+	@GetMapping("/showEndedFunding/{userId}")
+	public List<Contents> showEndedFunding(@PathVariable int userId) throws Exception{
+		return supportService.showEndedFunding(userId);
 	}
 }
 

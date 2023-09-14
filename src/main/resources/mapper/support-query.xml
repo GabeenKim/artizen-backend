@@ -136,5 +136,10 @@
 		WHERE support_id = #{VALUE}
 		
 	</select>
+	
+	<select id="showEndedFunding" parameterType="int" resultType="contents">
+		SELECT * from contents
+		WHERE content_id IN (select content_id from support where user_id = #{VALUE})
+	</select>
 
 </mapper>

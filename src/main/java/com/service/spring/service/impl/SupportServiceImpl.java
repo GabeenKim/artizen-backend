@@ -1,6 +1,7 @@
 package com.service.spring.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,5 +123,22 @@ public class SupportServiceImpl implements SupportService{
 		System.out.println(supportDAO.showSupportRank());
 		return supportDAO.showSupportRank();
 	}
+
+	@Override
+	public List<Contents> showEndedFunding(int userId) throws Exception {
+	
+		 List<Contents> endedContents = new ArrayList<Contents>();
+	        List<Contents> list = 	supportDAO.showEndedFunding(userId);
+	        
+	        java.util.Date currDate = Calendar.getInstance().getTime();
+
+	    for(Contents content : list) {
+	        if(currDate.after(content.getEndDay())) {
+	            endedContents.add(content);
+	        }
+	    }
+		return endedContents;
+	}
+	
 
 }
