@@ -19,5 +19,7 @@ public interface SupportService {
 	int notSatisfied(int contentId) throws Exception; //환불하기
 	
 	List<Support> showSupportRank() throws Exception; //후원랭킹 보여주기
+	
+	List<Contents> showEndedFunding(int userId) throws Exception;//펀딩한 콘텐츠 중에서 완료된 컨텐츠 
 
 }

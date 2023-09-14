@@ -71,6 +71,11 @@ public class SupportDAOImpl implements SupportDAO {
 		return sqlSession.delete(NS + "deleteFundingByContentId");
 	}
 
+	@Override
+	public List<Contents> showEndedFunding(int userId) throws Exception {
+		return sqlSession.selectList(NS + "showEndedFunding",userId);
+	}
+
 	
 
 }
