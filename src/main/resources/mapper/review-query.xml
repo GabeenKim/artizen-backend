@@ -12,7 +12,7 @@
 	
 	<select id="showReview" parameterType="int" resultType="hashmap">
 		SELECT
-		r.review,r.score 
+		r.review, r.score 
 		FROM contents c
 		JOIN reviews r ON(c.content_id=r.content_id)
 		WHERE c.writer_id = #{VALUE}			

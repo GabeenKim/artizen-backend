@@ -20,8 +20,9 @@ public interface UserDAO {
 	Writer showWriter(int infoId);
 	User showUserById(int userId);
 	
-	int updateUser(User user);
+//	int updateUser(User user);
 	int updateUserInfo(UserInfo userInfo);
+	int updateUserNickname(UserInfo userInfo);
 	int registerCharacter(HashMap<String, Object> map);
 	
 	int addAccount(HashMap<String, Object> map);

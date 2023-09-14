@@ -35,14 +35,19 @@ public class UserDAOImpl implements UserDAO{
 		return sqlSession.insert(NS+"registerWriter", writer);
 	}
 
-	@Override
-	public int updateUser(User user) {
-		return sqlSession.update(NS+"updateUser", user);
-	}
+//	@Override
+//	public int updateUser(User user) {
+//		return sqlSession.update(NS+"updateUser", user);
+//	}
 
 	@Override
 	public int updateUserInfo(UserInfo userInfo) {
 		return sqlSession.update(NS+"updateUserInfo", userInfo);
+	}
+	
+	@Override
+	public int updateUserNickname(UserInfo userInfo) {
+		return sqlSession.update(NS+"updateUserNickname", userInfo);
 	}
 	
 	@Override
@@ -115,9 +120,12 @@ public class UserDAOImpl implements UserDAO{
 		return sqlSession.selectOne(NS+"getWriterId", infoId);
 	}
 
+
 	@Override
 	public User showUserById(int userId) {
 		return sqlSession.selectOne(NS + "showUserById", userId);
 	}
+
+
 
 }
