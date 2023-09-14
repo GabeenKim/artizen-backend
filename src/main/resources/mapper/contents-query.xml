@@ -118,7 +118,12 @@
 		FROM contents
 		WHERE content_name = #{VALUE}
 	</select>
-
+	
+	<select id="findContentsById" parameterType="int" resultType="contents">
+	SELECT content_id,content_sum, content_name, target, category, start_day, end_day, likes, is_accepted,writer_id
+		FROM contents
+		WHERE content_id = #{VALUE}
+	</select>
 
 
 	<select id="showSupportContentsDetail" parameterType="int"

@@ -30,6 +30,31 @@
 		     </association>
 	</resultMap>
 	
+	<resultMap type="user" id="userWithPrice">
+        <id column="user_id" property="userId"/>
+        <result column="identity" property="identity"/>
+        <result column="character" property="character"/>
+        <result column="interests" property="interests"/>
+        <association property="userInfo" javaType="userInfo">
+            <id column="info_id" property="infoId"/>
+            <result column="name" property="name"/>
+            <result column="nickname" property="nickname"/>
+            <result column="email" property="email"/>
+            <result column="accounts" property="accounts"/>
+            <result column="bank" property="bank"/>
+            <result column="balance" property="balance"/>
+        </association>
+        <collection property="support" resultMap="supportWithUser"/>
+    </resultMap>
+
+
+    <resultMap type="Support" id="supportWithUser">
+         <id property= "supportId" column= "support_id"/>
+         <result property="price" column="price"/>
+         <result property="contentId" column="content_id"/>
+         <result property="userId" column="user_id"/>
+    </resultMap>
+	
 	<!-- content에 있는 sum 보기 -->
 	<resultMap type="Contents" id="supportWithContent">
 		<id property="contentId" column="content_id"/>
@@ -43,8 +68,7 @@
 	<insert id="addFunding" parameterType="support">
 		INSERT 
 		INTO support(support_id, price, content_id, user_id )
-		VALUES(#{supportId},#{price},#{contentId},#{userId})
-		
+		VALUES(support_seq.nextVal, #{price}, #{contentId}, #{userId})
 	</insert>
 	
 	<delete id="deleteFunding" parameterType="list">
@@ -53,7 +77,15 @@
 		WHERE support_id=#{VALUE}
 	</delete>
 	
-	<select id="showFunding" parameterType="support" resultType="map">
+	<delete id="deleteFundingByContentId" parameterType="int">
+		DELETE 
+		FROM support
+		WHERE content_id=#{VALUE}
+	</delete>
+	
+	
+	
+	<select id="showFunding" parameterType="int" resultType="map">
 			SELECT 
 			    c.content_id, 
 			    c.content_name,
@@ -75,7 +107,7 @@
 				FROM image
 					) i RIGHT JOIN contents c ON (i.content_id = c.content_id AND i.rn = 1)
 			JOIN support s ON (c.content_id = s.content_id)  
-			WHERE s.user_id=#{userId}
+			WHERE s.user_id=#{VALUE}
 	</select>
 	
 	<select id="showFundingUser" parameterType="int" resultMap="supportSelectMap">
@@ -85,18 +117,23 @@
 	</select>
 	
 	
- 	<select id="showSupportRank" resultMap="supportWithContent">
-		SELECT c.content_id, c.content_sum 
-		FROM contents c
-		JOIN support s ON c.content_id = s.content_id
-		ORDER BY c.content_sum DESC
-		FETCH FIRST 5 ROWS ONLY
-	</select> 
+ 	 <select id="showSupportRank" resultMap="userWithPrice">
+        select i.name, sum(j.price) as price
+        from user_info i
+        join(
+        select u.user_id, s.price, u.info_id
+        from users u join support s
+        on(u.user_id = s.user_id)
+        ) j
+        on( i.info_id = j.info_id)
+        group by i.name 
+        order by price DESC
+    </select> 
 	
-	<select id="showFundingDetail" resultMap="supportSelectMap">
-		SELECT *
+	<select id="showFundingDetail" resultMap="supportSelectMap" parameterType="int">
+		SELECT price, content_id, user_id
 		FROM support
-		WHERE support_id=#{supportId}
+		WHERE support_id = #{VALUE}
 		
 	</select>
 

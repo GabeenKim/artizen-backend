@@ -21,18 +21,22 @@ public class ContentsServiceImpl implements ContentsService{
 	private ContentsDAO contentsDAO;
 	
 	@Override
-	public int addContents(Contents contents) throws Exception {
+	public int addSupportContents(Contents contents) throws Exception {
 		contentsDAO.addContents(contents);
 		int id = contentsDAO.findContentsByName(contents.getContentName()).getContentId();
-		if(contents.getFundingContents()==null) {
-			SupportContents sc = contents.getSupportContents();
-			sc.setContentId(id);
-			return contentsDAO.addSupportContents(sc);
-		} else {
-			FundingContents fc = contents.getFundingContents();
-			fc.setContentId(id);
-			return contentsDAO.addFundingContents(fc);
-		}
+		SupportContents sc = contents.getSupportContents();
+		sc.setContentId(id);
+		return contentsDAO.addSupportContents(sc);
+	}
+	
+	@Override
+	public int addFundingContents(Contents contents) throws Exception {
+		contentsDAO.addContents(contents);
+		int id = contentsDAO.findContentsByName(contents.getContentName()).getContentId();
+		FundingContents fc = contents.getFundingContents();
+		fc.setContentId(id);
+		return contentsDAO.addFundingContents(fc);
+		
 	}
 
 	@Override
@@ -120,7 +124,7 @@ public class ContentsServiceImpl implements ContentsService{
     return endedContents;
 }
 
-	@Override
+	@Override   
 	public List<Contents> showCustomizedContents() throws Exception {
     // TODO Auto-generated method stub
     return null;
@@ -135,5 +139,7 @@ public class ContentsServiceImpl implements ContentsService{
 	public List<Contents> showAllFundingContents() throws Exception {
 		return contentsDAO.showAllFundingContents();
 	}
+
+	
 
 }

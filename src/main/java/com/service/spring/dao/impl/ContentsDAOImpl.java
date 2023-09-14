@@ -114,4 +114,10 @@ public class ContentsDAOImpl implements ContentsDAO{
 	    return sqlSession.selectList(NS + "showAllFundingContents");
 	}
 
+	@Override
+	public Contents findContentsById(int contentId) throws Exception {
+		return sqlSession.selectOne(NS + "findContentsById", contentId);
+	}
+
+
 }

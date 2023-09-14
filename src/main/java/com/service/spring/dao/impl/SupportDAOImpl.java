@@ -26,10 +26,11 @@ public class SupportDAOImpl implements SupportDAO {
 	}
 
 	@Override
-	public int deleteFunding(String supportId) {
+	public int deleteFunding(int supportId) {
 		int result = sqlSession.delete(NS+"deleteFunding", supportId);
 		return result;
 	}
+	
 
 	//selectOne으로 ..
 	@Override
@@ -44,7 +45,7 @@ public class SupportDAOImpl implements SupportDAO {
 	}
 
 	@Override
-	public List<User> showFundingUser(int contentId) {
+	public List<Support> showFundingUser(int contentId) {
 		return sqlSession.selectList(NS+"showFundingUser", contentId);
 	}
 
@@ -61,8 +62,15 @@ public class SupportDAOImpl implements SupportDAO {
 	}
 
 	@Override
-	public List<Contents> showSupportRank() {
+	public List<Support> showSupportRank() {
 		return sqlSession.selectList(NS+"showSupportRank");
 	}
+
+	@Override
+	public int deleteFundingByContentId(int contentId) {
+		return sqlSession.delete(NS + "deleteFundingByContentId");
+	}
+
+	
 
 }

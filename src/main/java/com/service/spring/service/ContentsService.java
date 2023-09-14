@@ -7,7 +7,8 @@ import com.service.spring.vo.Contents;
 
 
 public interface ContentsService {
-	int addContents(Contents contents)throws Exception;
+	int addSupportContents(Contents contents)throws Exception;
+	int addFundingContents(Contents contents) throws Exception;
 	int addAdminContents(int contentId) throws Exception;
 	int updateContents(Contents contents) throws Exception;
 	int deleteContents(int contentId) throws Exception;

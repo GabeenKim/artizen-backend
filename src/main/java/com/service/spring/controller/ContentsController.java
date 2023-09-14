@@ -23,9 +23,14 @@ public class ContentsController {
 	@Autowired
 	private ContentsService contentsService;
 	
-	@PostMapping("/poster/addContents")
-	public int addContents(@RequestBody Contents contents) throws Exception{
-		return contentsService.addContents(contents);
+	@PostMapping("/poster/addFundingContents")
+	public int addFundingContents(@RequestBody Contents contents) throws Exception{
+		return contentsService.addFundingContents(contents);
+	}
+	
+	@PostMapping("/poster/addSupportContents")
+	public int addSupportContents(@RequestBody Contents contents) throws Exception{
+		return contentsService.addSupportContents(contents);
 	}
 	
 	@PatchMapping("/poster/addAdminContents")

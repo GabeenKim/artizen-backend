@@ -115,4 +115,9 @@ public class UserDAOImpl implements UserDAO{
 		return sqlSession.selectOne(NS+"getWriterId", infoId);
 	}
 
+	@Override
+	public User showUserById(int userId) {
+		return sqlSession.selectOne(NS + "showUserById", userId);
+	}
+
 }
