@@ -4,12 +4,12 @@
 
 <mapper namespace="ContentsMapper">
 
-    <sql id="select-contents">
-        SELECT contents.content_id, contents.content_sum, contents.content_name, contents.target, contents.category, contents.start_day, contents.end_day, contents.likes, contents.is_accepted
-        FROM contents 
-    </sql>
-
-    <resultMap id="ContentsResultMap" type="Contents">
+	<sql id="select-contents">
+		SELECT contents.content_id, contents.content_sum, contents.content_name, contents.target, contents.category, contents.start_day, contents.end_day, contents.likes, contents.is_accepted
+	    FROM contents 
+	</sql>
+	
+	<resultMap id="ContentsResultMap" type="Contents">
     <id property="contentId" column="content_id"/>
     <result property="contentName" column="content_name"/>
     <result property="target" column="target"/>
@@ -20,54 +20,54 @@
     <result property= "isAccepted" column= "is_accepted"/>
 
     <association property= "supportContents" resultMap= "SupportContentsResultMap"/> 
-    <association property = "fundingContents" resultMap = "FundingContentsResultMap"/>
-    </resultMap>
+    <association property = "fundingContents" resultMap = "FundingContentsResultMap"/>  
+	</resultMap>
 
-    <resultMap id= "SupportContentsResultMap" type= "SupportContents">
+	<resultMap id= "SupportContentsResultMap" type= "SupportContents">
       <id property= "scId" column= "sc_id"/> 
       <id property= "contentId" column= "content_id"/> 
       <result property= "detail" column =  "detail"/> 
-      <result property = "teamDetail" column = "team_detail"/>
-      <result property =  "planDetail" column = "plan_detail"/>
-    </resultMap>
+      <result property = "teamDetail" column = "team_detail"/>  
+      <result property =  "planDetail" column = "plan_detail"/>  
+	</resultMap>
 
-    <resultMap id= "FundingContentsResultMap" type= "FundingContents">
+	<resultMap id= "FundingContentsResultMap" type= "FundingContents">
       <id property= "fundingId" column= "funding_id"/> 
       <id property= "contentId" column= "content_id"/> 
       <result property= "detail" column =  "detail"/> 
-      <result property = "transaction" column = "transaction "/>
-      <result property =  "productionCost" column = "production_cost "/>
-      <result property =  "purpose" column = "purpose "/>
-      <result property =  "minInvest" column = "min_invest "/>
-    </resultMap>
-
-    <insert id="addContents" parameterType="contents">
+      <result property = "transaction" column = "transaction "/>  
+      <result property =  "productionCost" column = "production_cost "/>  
+      <result property =  "purpose" column = "purpose "/>  
+      <result property =  "minInvest" column = "min_invest "/>  
+	</resultMap>
+	
+	<insert id="addContents" parameterType="contents">
         INSERT INTO contents (content_id,content_sum,content_name,target,
                 category,start_day,end_day,likes,is_accepted, writer_id) 
         VALUES(contents_seq.nextVal ,#{contentSum},#{contentName},#{target},#{category},
            #{startDay},#{endDay}, #{likes}, #{isAccepted},#{writerId})
-    </insert>
-
-    <insert id="addSupportContents" parameterType="supportContents">
+	</insert>
+	
+	<insert id="addSupportContents" parameterType="supportContents">
      INSERT INTO support_contents(sc_id,detail,team_detail,plan_detail,content_id)
      VALUES(support_contents_seq.nextVal,#{detail},#{teamDetail},#{planDetail},#{contentId})
-    </insert>
+	</insert>
 
-    <insert id="addFundingContents"  parameterType="fundingContents">
+	<insert id="addFundingContents"  parameterType="fundingContents">
     INSERT INTO funding_contents(funding_id,detail, transaction, production_cost,purpose,min_invest,content_id)
     VALUES(funding_contents_seq.nextVal,#{detail},#{transaction},#{productionCost},
         #{purpose},#{minInvest},#{contentId})
-    </insert>
+	</insert>
 
-
-    <update id="addAdminContents"  parameterType="int">
+	
+	<update id="addAdminContents"  parameterType="int">
     UPDATE contents 
     SET is_accepted = 1
-    WHERE content_id = #{contentId}
-    </update>
-
+    WHERE content_id = #{VALUE}
+	</update>
+	
 <!-- 업데이트  -->
-    <update id="updateContents"  parameterType="contents">
+	<update id="updateContents"  parameterType="contents">
     UPDATE contents 
     SET content_sum = #{contentSum}, 
         content_name =#{contentName},
@@ -78,107 +78,100 @@
         likes =#{likes},
         is_accepted = 0
     WHERE  writer_id = #{writerId} AND content_id = #{contentId}
-    </update>
+	</update>
 
-    <update id="updateFundingContents" parameterType="fundingContents">
+	<update id="updateFundingContents" parameterType="fundingContents">
     UPDATE funding_contents
     SET detail = #{detail},
         transaction = #{transaction},
         production_cost = #{productionCost}
         purpose= #{purpose},
         min_invest = #{minInvest}
+    
+    WHERE content_id = #{contentId}
+	</update>
 
-    WHERE content_id = #{contentId} AND funding_id = #{fundingId}
-    </update>
-
-    <update id="updateSupportContents" parameterType="supportContents">
+	<update id="updateSupportContents" parameterType="supportContents">
     UPDATE support_contents 
     SET detail = #{detail},
         team_detail = #{teamDetail},
         plan_detail = #{planDetail}
-    WHERE content_id = #{contentId} AND sc_id = #{scId} 
-    </update>
+    WHERE content_id = #{contentId} 
+	</update>
 
-    <!-- 삭제 - contents아이디만 있어도 외래키 덕분에 테이블 연달아 삭제 됨. -->
-    <delete id="deleteContents" parameterType="contents">
+	<!-- 삭제 - contents아이디만 있어도 외래키 덕분에 테이블 연달아 삭제 됨. -->
+	<delete id="deleteContents" parameterType="contents">
     DELETE FROM contents
-    WHERE content_id=#{contentId} AND writer_id = #{writerId}
-    </delete>
+    WHERE content_id=#{contentId}
+	</delete>
 
 
-    <!-- 해당 셀렉트 문은 승인된 게시물이므로 is_accepted 컬럼은 셀렉하지 않음.  -->
-    <select id="showAllContents" resultType="contents" >
+	<!-- 해당 셀렉트 문은 승인된 게시물이므로 is_accepted 컬럼은 셀렉하지 않음.  -->
+	<select id="showAllContents" resultType="contents" >
     SELECT c.content_id,c.content_sum, c.content_name as contentName, c.target, c.category, c.start_day, c.end_day, c.likes, c.is_accepted, c.writer_id
     FROM contents c
     WHERE c.is_accepted = 1
-    </select>
+	</select>
+
+	<select id="findContentsByName" parameterType="string" resultType="contents">
+	SELECT content_id,content_sum, content_name, target, category, start_day, end_day, likes, is_accepted,writer_id
+		FROM contents
+		WHERE content_name = #{VALUE}
+	</select>
+	
+	<select id="findContentsById" parameterType="int" resultType="contents">
+	SELECT content_id,content_sum, content_name, target, category, start_day, end_day, likes, is_accepted,writer_id
+		FROM contents
+		WHERE content_id = #{VALUE}
+	</select>
+
+
+	<select id="showSupportContentsDetail" parameterType="int"
+	resultMap="ContentsResultMap">
+	SELECT c.content_id, c.content_name, c.target, c.category, c.start_day,
+	c.end_day, c.likes, c.is_accepted, c.writer_id,
+	s.sc_id, s.detail, s.team_detail, s.plan_detail
+	FROM contents c
+	JOIN support_contents s ON(c.content_id = s.content_id)
+	WHERE s.content_id =#{VALUE}
+	</select>
+
+	<select id="showFundingContentsDetail" parameterType="int" resultMap="ContentsResultMap">
+    	SELECT c.content_id, c.content_name, c.target, c.category, c.start_day,
+       	c.end_day, c.likes, c.is_accepted,
+       	f.funding_id , f.detail ,
+       	f.transaction , f.production_cost ,
+       	f.purpose , f.min_invest 
+    	FROM contents c  
+    	JOIN funding_contents f ON (f.content_id = c.content_id)
+    	WHERE f.content_id =#{VALUE}
     
-    <select id="showAllSupportContents" resultType="contents" >
-    SELECT c.content_id,c.content_sum, c.content_name as contentName, c.target, c.category, c.start_day, c.end_day, c.likes, c.is_accepted, c.writer_id
-    FROM contents c
-    WHERE c.content_id in(select content_id from support_contents)
-    </select>
-    
-    <select id="showAllFundingContents" resultType="contents" >
-    SELECT c.content_id,c.content_sum, c.content_name as contentName, c.target, c.category, c.start_day, c.end_day, c.likes, c.is_accepted, c.writer_id
-    FROM contents c
-    WHERE c.content_id in(select content_id from funding_contents)
-    </select>
+	</select>
+	
 
-    <select id="findContentsByName" parameterType="string" resultType="contents">
-    SELECT content_id,content_sum, content_name, target, category, start_day, end_day, likes, is_accepted,writer_id
-        FROM contents
-        WHERE content_name = #{VALUE}
-    </select>
+	<select id="findContentsByCreator" parameterType="String" resultMap="ContentsResultMap">
+		SELECT contents.content_id, contents.content_sum, contents.content_name, contents.target, contents.category, contents.start_day, contents.end_day, contents.likes, contents.is_accepted
+	    FROM contents
+	    JOIN writer ON contents.writer_id = writer.writer_id 
+	    JOIN user_info ON writer.info_id = user_info.info_id
+	    WHERE user_info.name = #{VALUE}
 
-
-
-    <select id="showSupportContentsDetail" parameterType="int"
-    resultMap="ContentsResultMap">
-    SELECT c.content_id, c.content_name, c.target, c.category, c.start_day,
-    c.end_day, c.likes, c.is_accepted, c.writer_id,
-    s.sc_id, s.detail, s.team_detail, s.plan_detail
-    FROM contents c
-    JOIN support_contents s ON(c.content_id = s.content_id)
-    WHERE sc_id =#{VALUE}
-    </select>
-
-    <select id="showFundingContentsDetail" parameterType="int" resultMap="ContentsResultMap">
-        SELECT c.content_id, c.content_name, c.target, c.category, c.start_day,
-           c.end_day, c.likes, c.is_accepted,
-           f.funding_id , f.detail ,
-           f.transaction , f.production_cost ,
-           f.purpose , f.min_invest 
-        FROM contents c
-        JOIN funding_contents f ON (f.content_id = c.content_id)
-        WHERE funding_id =#{VALUE}
-
-    </select>
-
-
-    <select id="findContentsByCreator" parameterType="String" resultMap="ContentsResultMap">
-        SELECT contents.content_id, contents.content_sum, contents.content_name, contents.target, contents.category, contents.start_day, contents.end_day, contents.likes, contents.is_accepted
-        FROM contents
-        JOIN writer ON contents.writer_id = writer.writer_id 
-        JOIN user_info ON writer.info_id = user_info.info_id
-        WHERE user_info.name = #{VALUE}
-
-    </select>
-
-    <select id="showMyContents" parameterType="int" resultType="Contents">
-        SELECT contents.content_id, contents.content_sum, contents.content_name, contents.target, contents.category, contents.start_day, contents.end_day, contents.likes, contents.is_accepted
-        FROM contents
-        JOIN writer ON contents.writer_id = writer.writer_id 
-        WHERE writer.writer_id = #{VALUE}
-    </select>
-
-
-    <select id="showAdminContents" parameterType="int" resultType="Contents">
-        <include refid="select-contents"/>
-        WHERE is_accepted = 0
-    </select>
-
-    <select id="showNotableContents" resultType="Contents">
+	</select>
+	
+	<select id="showMyContents" parameterType="int" resultType="Contents">
+		SELECT contents.content_id, contents.content_sum, contents.content_name, contents.target, contents.category, contents.start_day, contents.end_day, contents.likes, contents.is_accepted
+		FROM contents
+		JOIN writer ON contents.writer_id = writer.writer_id 
+		WHERE writer.writer_id = #{VALUE}
+	</select>
+	
+	
+	<select id="showAdminContents" parameterType="int" resultType="Contents">
+		<include refid="select-contents"/>
+		WHERE is_accepted = 0
+	</select>
+	
+	<select id="showNotableContents" resultType="Contents">
     <![CDATA[
     SELECT content_id, content_sum, content_name, target, category, start_day, end_day, likes,
            is_accepted, writer_id
@@ -190,10 +183,10 @@
     ) subquery_alias 
     WHERE subquery_alias.rank_likes <= 3
     ]]>
-    </select>
-
-
-    <select id="showContentsRank" resultType="Contents">
+	</select>
+	
+	
+	<select id="showContentsRank" resultType="Contents">
     <![CDATA[
     SELECT content_id, content_sum, content_name, target, category, start_day, end_day, likes,
            is_accepted, writer_id
@@ -202,16 +195,22 @@
                writer_id,
                RANK() OVER (ORDER BY content_sum DESC) rank_content_sum
         FROM contents
-    ) subquery_alias
-    WHERE subquery_alias.rank_content_sum <= 10
+    ) subquery_alias  
+    WHERE subquery_alias.rank_content_sum <= 3
     ]]>
+	</select>
+	
+	 <select id="showAllSupportContents" resultType="contents" >
+    SELECT c.content_id,c.content_sum, c.content_name as contentName, c.target, c.category, c.start_day, c.end_day, c.likes, c.is_accepted, c.writer_id
+    FROM contents c
+    WHERE c.content_id in(select content_id from support_contents)
     </select>
-    
-    <select id="showContents" parameterType="int" resultType = "contents">
-        SELECT content_id, content_sum, content_name, target, category, start_day, end_day, likes,
-           is_accepted, writer_id
-        FROM contents 
-        WHERE content_id = #{VALUE}
-    </select> 
-    
+
+    <select id="showAllFundingContents" resultType="contents" >
+    SELECT c.content_id,c.content_sum, c.content_name as contentName, c.target, c.category, c.start_day, c.end_day, c.likes, c.is_accepted, c.writer_id
+    FROM contents c
+    WHERE c.content_id in(select content_id from funding_contents)
+    </select>
+	
+	
 </mapper> 

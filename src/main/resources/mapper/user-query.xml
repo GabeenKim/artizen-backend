@@ -69,6 +69,14 @@
 		JOIN user_info i ON (u.info_id=i.info_id)
 		WHERE i.info_id = #{VALUE}
 	</select>
+	
+	<select id="showUserById" parameterType="int" resultMap="userWithInfo">
+		SELECT
+		u.user_id, u.identity, u.character, u.interests, u.info_id, i.name, i.nickname, i.email, i.accounts, i.bank, i.balance
+		FROM users u
+		JOIN user_info i ON (u.info_id=i.info_id)
+		WHERE u.user_id = #{VALUE}
+	</select>
 
 	<resultMap type="writer" id="writerWithInfo">
 		<id column="writer_id" property="writerId"/>

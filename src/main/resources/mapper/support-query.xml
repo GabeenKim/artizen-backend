@@ -11,33 +11,8 @@
 		 <result property="contentId" column="content_id"/>
 		 <result property="userId" column="user_id"/>
 	</resultMap>
-	
-	<resultMap type="user" id="userWithPrice">
-		<id column="user_id" property="userId"/>
-		<result column="identity" property="identity"/>
-		<result column="character" property="character"/>
-		<result column="interests" property="interests"/>
-		<association property="userInfo" javaType="userInfo">
-			<id column="info_id" property="infoId"/>
-			<result column="name" property="name"/>		
-			<result column="nickname" property="nickname"/>			
-			<result column="email" property="email"/>			
-			<result column="accounts" property="accounts"/>			
-			<result column="bank" property="bank"/>			
-			<result column="balance" property="balance"/>			
-		</association>		
-		<collection property="support" resultMap="supportWithUser"/>
-	</resultMap>
-	
-	
-	<resultMap type="Support" id="supportWithUser">
-		 <id property= "supportId" column= "support_id"/>
-		 <result property="price" column="price"/>
-		 <result property="contentId" column="content_id"/>
- 		<result property="userId" column="user_id"/>
-	</resultMap>
-	
-		
+
+
 	<resultMap type="Contents" id="contentSelectMap">
 	    <id property="contentId" column="content_id"/>
 	    <result property="contentName" column="content_name"/>
@@ -55,6 +30,31 @@
 		     </association>
 	</resultMap>
 	
+	<resultMap type="user" id="userWithPrice">
+        <id column="user_id" property="userId"/>
+        <result column="identity" property="identity"/>
+        <result column="character" property="character"/>
+        <result column="interests" property="interests"/>
+        <association property="userInfo" javaType="userInfo">
+            <id column="info_id" property="infoId"/>
+            <result column="name" property="name"/>
+            <result column="nickname" property="nickname"/>
+            <result column="email" property="email"/>
+            <result column="accounts" property="accounts"/>
+            <result column="bank" property="bank"/>
+            <result column="balance" property="balance"/>
+        </association>
+        <collection property="support" resultMap="supportWithUser"/>
+    </resultMap>
+
+
+    <resultMap type="Support" id="supportWithUser">
+         <id property= "supportId" column= "support_id"/>
+         <result property="price" column="price"/>
+         <result property="contentId" column="content_id"/>
+         <result property="userId" column="user_id"/>
+    </resultMap>
+	
 	<!-- content에 있는 sum 보기 -->
 	<resultMap type="Contents" id="supportWithContent">
 		<id property="contentId" column="content_id"/>
@@ -68,8 +68,7 @@
 	<insert id="addFunding" parameterType="support">
 		INSERT 
 		INTO support(support_id, price, content_id, user_id )
-		VALUES(#{supportId},#{price},#{contentId},#{userId})
-		
+		VALUES(support_seq.nextVal, #{price}, #{contentId}, #{userId})
 	</insert>
 	
 	<delete id="deleteFunding" parameterType="list">
@@ -78,7 +77,15 @@
 		WHERE support_id=#{VALUE}
 	</delete>
 	
-	<select id="showFunding" parameterType="support" resultType="map">
+	<delete id="deleteFundingByContentId" parameterType="int">
+		DELETE 
+		FROM support
+		WHERE content_id=#{VALUE}
+	</delete>
+	
+	
+	
+	<select id="showFunding" parameterType="int" resultType="map">
 			SELECT 
 			    c.content_id, 
 			    c.content_name,
@@ -100,7 +107,7 @@
 				FROM image
 					) i RIGHT JOIN contents c ON (i.content_id = c.content_id AND i.rn = 1)
 			JOIN support s ON (c.content_id = s.content_id)  
-			WHERE s.user_id=#{userId}
+			WHERE s.user_id=#{VALUE}
 	</select>
 	
 	<select id="showFundingUser" parameterType="int" resultMap="supportSelectMap">
@@ -110,87 +117,24 @@
 	</select>
 	
 	
- 	<select id="showSupportRank" resultMap="userWithPrice">
-		select i.name, sum(j.price) as price
-		from user_info i
-		join(
-		select u.user_id, s.price, u.info_id
-		from users u join support s
-		on(u.user_id = s.user_id)
-		) j
-		on( i.info_id = j.info_id)
-		group by i.name 
-		order by price DESC
-	</select> 
+ 	 <select id="showSupportRank" resultMap="userWithPrice">
+        select i.name, sum(j.price) as price
+        from user_info i
+        join(
+        select u.user_id, s.price, u.info_id
+        from users u join support s
+        on(u.user_id = s.user_id)
+        ) j
+        on( i.info_id = j.info_id)
+        group by i.name 
+        order by price DESC
+    </select> 
 	
-	<select id="showFundingDetail" resultMap="supportSelectMap">
-		SELECT *
+	<select id="showFundingDetail" resultMap="supportSelectMap" parameterType="int">
+		SELECT price, content_id, user_id
 		FROM support
-		WHERE support_id=#{supportId}
+		WHERE support_id = #{VALUE}
 		
 	</select>
-	
-<select id="showfundingList" parameterType="int" resultMap="supportSelectMap">
-	SELECT content_id, sum(price) as price, user_id
-	FROM support
-	group by content_id,user_id
-		WHERE content_id=#{VALUE}
-	
-	</select> 
 
-<!-- 
-	<update id="notSatisfied" parameterType="int">
-	  UPDATE support
-	  SET status = 'REFUNDED'
-	  WHERE support_id = #{supportId} AND status = 'ACTIVE'
-	</update>
-	
-	<select id="selectUser" parameterType="userInfo" resultType="userInfo">
-		SELECT id, pw
-		FROM userinfo
-		WHERE id=#{id}
-		<if test="pw!=null">
-			AND pw=#{pw}
-		</if>
-	</select>
-	vo 결과타입 
-	<resultMap type="phone" id="phonewithCompany">
-		<id column="num" property="num"/>
-		<result column="model" property="model"/>
-		<result column="price" property="price"/>
-		<result column="vcode" property="vcode"/>
-		<association property="company" javaType="company">
-			<id column="vcode" property="vcode"/>
-			<result column="vendor" property="vendor"/>
-		</association>
-	</resultMap>
-	모든 폰 조회하기 & 특정 폰 조회하기 까지 가능한 동적쿼리로 작성 :: JOIN 사용 됨
-	SqlSession(sqlSessionTemplate) :: selectList(), selectOne() 
-	<select id="select" parameterType="phone" resultMap="phonewithCompany">
-		SELECT 
-		p.num, p.model, p.price, p.vcode, c.vendor
-		FROM phones p
-		JOIN company c ON(p.vcode = c.vcode)
-		 <if test="num!=null"> 특정폰 조회하기
-			WHERE num=#{num}	num에 값을 넣으면	 	
-		 </if>
-		
-	</select>
-	
-	
-	<delete id="delete" parameterType="list">
-		DELETE 
-		FROM phones
-		WHERE num in 
-		<foreach collection="list" item="num" open="(" close=")" separator=",">
-			#{num}
-		</foreach>
-	</delete>
-	Restcontroller 추가 부분
-	<update id="update" parameterType="phone">
-	    UPDATE phones
-	    SET model=#{model}, price=#{price}, vcode=#{vcode}
-	    WHERE num=#{num}
-	</update>
-	 -->
 </mapper>
