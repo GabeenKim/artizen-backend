@@ -33,7 +33,7 @@ public class Contents {
 	private List<Reviews> review;
 	private FundingContents fundingContents;
 	private SupportContents supportContents;
-	private List<Gift> gifts;
+	private List<Gift> gift;
 	
 	
 	

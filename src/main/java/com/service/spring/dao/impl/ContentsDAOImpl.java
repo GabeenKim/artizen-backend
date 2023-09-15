@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.service.spring.dao.ContentsDAO;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.FundingContents;
+import com.service.spring.vo.Gift;
 import com.service.spring.vo.SupportContents;
 
 @Repository
@@ -117,6 +118,16 @@ public class ContentsDAOImpl implements ContentsDAO{
 	@Override
 	public Contents findContentsById(int contentId) throws Exception {
 		return sqlSession.selectOne(NS + "findContentsById", contentId);
+	}
+
+	@Override
+	public int addGift(Gift gift) throws Exception {
+		return sqlSession.insert(NS+"addGift", gift);
+	}
+
+	@Override
+	public int updateGift(Gift gift) throws Exception {
+		return sqlSession.update(NS+"updateGift", gift);
 	}
 
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.FundingContents;
+import com.service.spring.vo.Gift;
 import com.service.spring.vo.SupportContents;
 
 public interface ContentsDAO {
@@ -32,4 +33,6 @@ public interface ContentsDAO {
 	List<Contents> showAllSupportContents() throws Exception;
 	List<Contents> showAllFundingContents() throws Exception;
 
+	int addGift(Gift gift) throws Exception;
+	int updateGift(Gift gift) throws Exception;
 }
