@@ -12,6 +12,7 @@ import com.service.spring.dto.ContentIdRequestDTO;
 import com.service.spring.service.ContentsService;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.FundingContents;
+import com.service.spring.vo.Gift;
 import com.service.spring.vo.SupportContents;
 
 @Service
@@ -26,6 +27,14 @@ public class ContentsServiceImpl implements ContentsService{
 		int id = contentsDAO.findContentsByName(contents.getContentName()).getContentId();
 		SupportContents sc = contents.getSupportContents();
 		sc.setContentId(id);
+		
+		List<Gift> gifts = contents.getGift();
+
+		for(Gift g : gifts) {
+			g.setContentId(id);
+			contentsDAO.addGift(g);
+		}
+		
 		return contentsDAO.addSupportContents(sc);
 	}
 	
@@ -33,8 +42,17 @@ public class ContentsServiceImpl implements ContentsService{
 	public int addFundingContents(Contents contents) throws Exception {
 		contentsDAO.addContents(contents);
 		int id = contentsDAO.findContentsByName(contents.getContentName()).getContentId();
+		System.out.println(id);
 		FundingContents fc = contents.getFundingContents();
 		fc.setContentId(id);
+		
+		List<Gift> gifts = contents.getGift();
+
+		for(Gift g : gifts) {
+			g.setContentId(id);
+			contentsDAO.addGift(g);
+		}
+		
 		return contentsDAO.addFundingContents(fc);
 		
 	}
@@ -45,19 +63,29 @@ public class ContentsServiceImpl implements ContentsService{
 	}
 
 	@Override
-	public int updateContents(Contents contents) throws Exception {
-		contentsDAO.updateContents(contents);
-		System.out.println(contents.getContentId());
-		if(contents.getFundingContents()==null) {
-			SupportContents sc = contents.getSupportContents();
-			sc.setContentId(contents.getContentId());
-			return contentsDAO.updateSupportContents(sc);
-		} else {
-			FundingContents fc = contents.getFundingContents();
-			fc.setContentId(contents.getContentId());
-			return contentsDAO.updateFundingContents(fc);
-		}
-	}
+    public int updateContents(Contents contents) throws Exception {
+        contentsDAO.updateContents(contents);
+        System.out.println(contents.getContentId());
+        
+        List<Gift> gifts = contents.getGift();
+        for(Gift g : gifts) {
+        	
+            g.setContentId(contents.getContentId());
+            contentsDAO.updateGift(g);
+        }
+        
+        if(contents.getFundingContents()==null) {
+            SupportContents sc = contents.getSupportContents();
+            sc.setContentId(contents.getContentId());
+
+            return contentsDAO.updateSupportContents(sc);
+        } else {
+            FundingContents fc = contents.getFundingContents();
+            fc.setContentId(contents.getContentId());
+
+            return contentsDAO.updateFundingContents(fc);
+        }
+    }
 
 	@Override
 	public int deleteContents(int contentId) throws Exception {
