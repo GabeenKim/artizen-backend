@@ -1,6 +1,7 @@
 package com.service.spring.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,5 +75,13 @@ public class AdminController {
 		}
 	}
 	
-	
+	@GetMapping("/userList")
+	public ResponseEntity userList() throws Exception{
+		try {
+			List<Map<String, Object>> users = adminService.userList();
+			return new ResponseEntity(users, HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	}
 }
