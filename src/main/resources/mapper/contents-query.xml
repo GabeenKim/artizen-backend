@@ -21,6 +21,7 @@
 
     <association property= "supportContents" resultMap= "SupportContentsResultMap"/> 
     <association property = "fundingContents" resultMap = "FundingContentsResultMap"/>  
+	<association property = "gifts" resultMap="giftResultMap" />
 	</resultMap>
 
 	<resultMap id= "SupportContentsResultMap" type= "SupportContents">
@@ -41,6 +42,14 @@
       <result property =  "minInvest" column = "min_invest "/>  
 	</resultMap>
 	
+	<resultMap id="giftResultMap" type="gift" >
+	<id property="giftId" column="gift_id"/>
+	<id property= "contentId" column= "content_id"/> 
+	<result property= "criterion" column =  "criterion"/> 
+	<result property= "giftList" column =  "gift_list"/> 
+	<result property= "ticketCnt" column =  "ticket_cnt"/> 
+	</resultMap>
+	
 	<insert id="addContents" parameterType="contents">
         INSERT INTO contents (content_id,content_sum,content_name,target,
                 category,start_day,end_day,likes,is_accepted, writer_id) 
@@ -59,6 +68,10 @@
         #{purpose},#{minInvest},#{contentId})
 	</insert>
 
+	<insert id="addGift" parameterType="gift">
+		INSERT INTO gift(gift_id,criterion,gift_list,ticket_cnt,content_id )
+		VALUES(gift_seq.nextVal ,#{criterion} ,#{giftList},#{ticketCnt},#{contentId});
+	</insert>
 	
 	<update id="addAdminContents"  parameterType="int">
     UPDATE contents 
@@ -130,10 +143,11 @@
 	resultMap="ContentsResultMap">
 	SELECT c.content_id, c.content_name, c.target, c.category, c.start_day,
 	c.end_day, c.likes, c.is_accepted, c.writer_id,
-	s.sc_id, s.detail, s.team_detail, s.plan_detail
+	s.sc_id, s.detail, s.team_detail, s.plan_detail,g.gift_id, g.criterion, g.gift_list, g.ticket_cnt
 	FROM contents c
 	JOIN support_contents s ON(c.content_id = s.content_id)
-	WHERE s.content_id =#{VALUE}
+	join gift g on (g.content_id = s.content_id)
+    WHERE s.content_id =#{VALUE}
 	</select>
 
 	<select id="showFundingContentsDetail" parameterType="int" resultMap="ContentsResultMap">
@@ -141,9 +155,10 @@
        	c.end_day, c.likes, c.is_accepted,
        	f.funding_id , f.detail ,
        	f.transaction , f.production_cost ,
-       	f.purpose , f.min_invest 
-    	FROM contents c  
+       	f.purpose , f.min_invest ,g.gift_id, g.criterion, g.gift_list, g.ticket_cnt
+    	FROM contents c
     	JOIN funding_contents f ON (f.content_id = c.content_id)
+        join gift g on (g.content_id = f.content_id)
     	WHERE f.content_id =#{VALUE}
     
 	</select>

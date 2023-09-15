@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +19,7 @@ import com.service.spring.dto.ContentIdRequestDTO;
 import com.service.spring.service.ContentsService;
 import com.service.spring.vo.Contents;
 
+@CrossOrigin(origins =  "*",allowedHeaders = "*" )
 @RestController
 public class ContentsController {
 	@Autowired
@@ -148,11 +150,11 @@ public class ContentsController {
 	    }
 	}
 
-	@GetMapping("/poster/showMyContents")
-	public ResponseEntity showMyContents(int userId) {
+	@GetMapping("/poster/showMyContents/{writerId}")
+	public ResponseEntity showMyContents(@PathVariable int writerId) {
 	    try {
 	        //인자값으로 writerId 넘겨줘야 함. 
-	        List<Contents> selected = contentsService.showMyContents(userId);
+	        List<Contents> selected = contentsService.showMyContents(writerId);
 
 	        return new ResponseEntity(selected,HttpStatus.OK);
 	        
