@@ -19,6 +19,7 @@
 		<mapper resource="mapper/review-query.xml"/>	
 		<mapper resource="mapper/user-query.xml"/>	
 		<mapper resource="mapper/support-query.xml"/>	
+		<mapper resource="mapper/admin-query.xml"/>	
 	</mappers>
 
 </configuration>
