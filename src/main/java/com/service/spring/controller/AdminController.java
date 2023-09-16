@@ -17,7 +17,8 @@ import com.service.spring.dao.AdminDAO;
 import com.service.spring.service.AdminService;
 import com.service.spring.vo.Contents;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
