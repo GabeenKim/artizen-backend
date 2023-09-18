@@ -3,6 +3,7 @@ package com.service.spring.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +23,7 @@ import com.service.spring.vo.User;
 import com.service.spring.vo.UserInfo;
 import com.service.spring.vo.Writer;
 
-@CrossOrigin(origins = "http://localhost:3000") 
+@CrossOrigin(origins =  "*",allowedHeaders = "*" )
 @RestController
 public class UserController {
 
@@ -37,6 +39,7 @@ public class UserController {
 			int identity = userService.showIdentity(loginUser.getInfoId());
 			int id = 0;
 			if(identity == 1) { //유저
+				System.out.println("hihi");
 				id = userService.getUserId(loginUser.getInfoId());
 				User userResult = new User();
 				userResult.setUserInfo(loginUser);
@@ -186,5 +189,20 @@ public class UserController {
 //			System.out.println(e);
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
+	}
+	
+	@PutMapping("/account/registerCharacter")
+	public int registerCharacter(@RequestBody  HashMap<String, Object> request) {
+	    int userId = (int) request.get("userId");
+	    String character = (String) request.get("character");
+	    
+	    System.out.println(userId);
+	    System.out.println(character);
+	    
+		HashMap<String, Object> map  = new HashMap<String, Object>();
+		map.put("userId",userId);
+		map.put("character",character);
+		System.out.println(map);
+		return userService.registerCharacter(map);
 	}
 }
