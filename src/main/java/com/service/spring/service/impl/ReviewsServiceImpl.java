@@ -16,7 +16,7 @@ public class ReviewsServiceImpl implements ReviewsService{
 	private ReviewsDAO reviewsDAO;
 	
 	@Override
-	public int addReview(int userId, int contentId, String review, int score) {
+	public int addReview(int userId, int contentId, String review, String score) {
 		return reviewsDAO.addReview(userId, contentId, review, score);
 	}
 

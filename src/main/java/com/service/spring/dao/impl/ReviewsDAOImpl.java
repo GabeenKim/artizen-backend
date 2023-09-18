@@ -20,7 +20,7 @@ public class ReviewsDAOImpl implements ReviewsDAO{
 	private static String NS = "sql.review.mapper.";
 	
 	@Override
-	public int addReview(int userId, int contentId, String review, int score) {
+	public int addReview(int userId, int contentId, String review, String score) {
 		Map<String, Object> map = new HashMap();
 		map.put("contentId",contentId);
 		map.put("userId",userId);
