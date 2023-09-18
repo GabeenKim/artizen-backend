@@ -96,9 +96,6 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public int registerCharacter(HashMap<String, Object> map) {
-		//int userId, String character
-		int userId = userDAO.getUserId((Integer)map.get("infoId"));
-		map.put("userId", userId);
 		return userDAO.registerCharacter(map);
 	}
 
