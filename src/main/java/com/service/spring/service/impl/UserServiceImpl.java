@@ -1,6 +1,7 @@
 package com.service.spring.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -142,6 +143,16 @@ public class UserServiceImpl implements UserService{
 			return userInfo;
 		}
 		return null;
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getWriterRanking() {
+		return userDAO.getWriterRanking();
+	}
+
+	@Override
+	public HashMap<String, Object> getWriterInfo(int writerId) {
+		return userDAO.getWriterInfo(writerId);
 	}
 
 }

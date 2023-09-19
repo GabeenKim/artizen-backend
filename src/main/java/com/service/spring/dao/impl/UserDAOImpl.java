@@ -1,6 +1,7 @@
 package com.service.spring.dao.impl;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,10 +121,28 @@ public class UserDAOImpl implements UserDAO{
 		return sqlSession.selectOne(NS+"getWriterId", infoId);
 	}
 
+	@Override
+	public List<HashMap<String, Object>> getWriterRanking() {
+		List<HashMap<String, Object>> result=null;
+		try {
+			result = sqlSession.selectList(NS+"getWriterRanking");
+			return result;
+		}
+		catch(Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+
 
 	@Override
 	public User showUserById(int userId) {
 		return sqlSession.selectOne(NS + "showUserById", userId);
+	}
+
+	@Override
+	public HashMap<String, Object> getWriterInfo(int writerId) {
+		return sqlSession.selectOne(NS + "getWriterInfo", writerId);
 	}
 
 

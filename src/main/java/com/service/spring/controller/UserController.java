@@ -1,6 +1,7 @@
 package com.service.spring.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.catalina.connector.Response;
@@ -204,5 +205,28 @@ public class UserController {
 		map.put("character",character);
 		System.out.println(map);
 		return userService.registerCharacter(map);
+	}
+	
+	@GetMapping("/account/getWriterRanking")
+	public ResponseEntity getWriterRanking() {
+		try {
+			List<HashMap<String, Object>> result = userService.getWriterRanking();
+			return new ResponseEntity(result, HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/account/getWriterInfo/{writerId}")
+	public ResponseEntity getWriterInfo(@PathVariable int writerId) {
+		System.out.println(writerId);
+		try {
+			HashMap<String, Object> result = userService.getWriterInfo(writerId);
+			System.out.println(result);
+			return new ResponseEntity(result, HttpStatus.OK);
+		}catch(Exception e) {
+			System.out.println(e);
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
 	}
 }
