@@ -167,4 +167,55 @@
 		FROM writer w JOIN user_info i ON (w.info_id = i.info_id)
 		WHERE w.info_id = #{VALUE}
 	</select>
+	<!-- 좋아요 많은 작가 순위별로 받아오기 -->
+	<select id="getWriterRanking" resultType="hashmap">
+		<![CDATA[
+			SELECT
+			  w2.writer_id as writerId,
+			  w2.total_likes as likes,
+			  w2.ranking as ranking,
+			  p.is_progress as isProgress
+			FROM (
+			  SELECT
+			    writer_id,
+			    total_likes,
+			    RANK() OVER (ORDER BY total_likes DESC) ranking
+			  FROM (
+			    SELECT
+			      w.writer_id,
+			      SUM(c.likes) as total_likes
+			    FROM
+			      writer w
+			      JOIN contents c ON (w.writer_id = c.writer_id)
+			    GROUP BY
+			      w.writer_id
+			  )
+			) w2 JOIN (
+			    SELECT CASE WHEN count(CASE WHEN SYSDATE<end_day THEN 1 END)=0 THEN 0 ELSE 1 END is_progress, writer_id
+			    FROM contents
+			    GROUP BY writer_id
+			) p ON(w2.writer_id = p.writer_id)
+			WHERE ranking <= 10
+			ORDER BY ranking
+		]]>
+	</select>
+	<!-- 작가 페이지 정보 받아오기 -->
+	<select id="getWriterInfo" parameterType="int" resultType="hashmap">
+		<![CDATA[
+			SELECT c2.name, c2.nickname, COALESCE(sum(r.score)/count(r.score), 0) avg_score
+			FROM
+			(
+			    SELECT c.content_id, w2.name, w2.nickname
+			    FROM
+			    (
+			        SELECT i.name, i.nickname, w.writer_id
+			        FROM writer w JOIN user_info i ON (w.info_id = i.info_id)
+			        WHERE w.writer_id = #{VALUE}
+			    ) w2 
+			    JOIN contents c ON (w2.writer_id = c.writer_id)
+			) c2 
+			LEFT JOIN reviews r ON (c2.content_id = r.content_id)
+			GROUP BY c2.name, c2.nickname
+		]]>
+	</select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.service.spring.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.service.spring.vo.User;
 import com.service.spring.vo.UserInfo;
@@ -35,4 +36,6 @@ public interface UserDAO {
 	
 	int getUserId(int infoId);
 	int getWriterId(int infoId);
+	List<HashMap<String, Object>> getWriterRanking();
+	HashMap<String, Object> getWriterInfo(int writerId);
 }
