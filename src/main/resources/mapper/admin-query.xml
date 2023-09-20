@@ -19,11 +19,32 @@
        UPDATE contents SET is_accepted = -1 WHERE content_id=#{VALUE}
     </update>
 	
+	
+	<resultMap type="contents" id="contentsWithFundingDetail">
+		<id column="content_id" property="contentId"/>
+		<result column="content_name" property="contentName"/>
+		<result column="content_sum" property="contentSum"/>
+		<result column="target" property="target"/>
+		<result column="category" property="category"/>
+		<result column="start_day" property="startDay"/>
+		<result column="end_day" property="endDay"/>
+		<result column="writer_id" property="writerId"/>
+		<association property="fundingContents" javaType="fundingContents">
+			<id column="funding_id" property="fundingId"/>
+			<result column="name" property="name"/>		
+			<result column="detail" property="detail"/>			
+			<result column="transaction" property="transaction"/>			
+			<result column="production_cost" property="productionCost"/>			
+			<result column="purpose" property="purpose"/>			
+			<result column="min_invest" property="minInvest"/>			
+		</association>		
+	</resultMap>
+	
 	<!-- 수익률 분배 대상 프로젝트 가져오기 :: 완료 [1. 마감일이 현재 날짜 기준으로 넘겼고, 2. content_sum이 target값을 넘었을 때]-->
 	<!-- 펀딩만 포함 -->
-	<select id="okList" resultType="contents">
+	<select id="okList" resultMap="contentsWithFundingDetail">
 		<![CDATA[
-			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.start_day, c.end_day,
+			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.category, c.start_day, c.end_day, c.writer_id,
 			f.funding_id, f.detail, f.transaction, f.production_cost, f.purpose, f.min_invest FROM contents c JOIN funding_contents f ON c.content_id = f.content_id   
 			WHERE c.end_day < TO_CHAR(SYSDATE, 'YYYYMMDD') AND c.content_sum > c.target
 			]]>
@@ -33,15 +54,22 @@
 	<!-- 펀딩만 포함 -->
 	<select id="failList" resultType="contents">
 		<![CDATA[
-			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.start_day, c.end_day,
+			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.start_day, c.end_day, c.writer_id,
 			f.funding_id, f.detail, f.transaction, f.production_cost, f.purpose, f.min_invest FROM contents c JOIN funding_contents f ON c.content_id = f.content_id   
 			WHERE c.end_day < TO_CHAR(SYSDATE, 'YYYYMMDD') AND c.content_sum < c.target
 			]]>
 	</select>
 	
-	<!-- 유저 목록 가져오기 -->
+	<!-- 유저 목록 가져오기 :: 완료-->
 	<select id="userList" resultType="map">
-		select a.user_id, a.info_id, b.name, b.email from users a JOIN user_info b ON a.info_id = b.info_id
+		SELECT a.user_id, a.info_id, b.name, b.email from users a JOIN user_info b ON a.info_id = b.info_id
+	</select>
+	
+	<!-- 작가 검색 -->
+	<select id="getWriterName" parameterType="int" resultType="string">
+		SELECT u.name FROM writer w 
+		JOIN user_info u ON w.info_id = u.info_id
+		WHERE writer_id=#{VALUE} 
 	</select>
 	
 </mapper> 

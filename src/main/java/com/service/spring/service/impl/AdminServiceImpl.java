@@ -45,5 +45,10 @@ public class AdminServiceImpl implements AdminService {
 	public List<Map<String, Object>> userList() throws Exception {
 		return adminDAO.userList();
 	}
+
+	@Override
+	public String getWriterName(int writerId) throws Exception {
+		return adminDAO.getWriterName(writerId);
+	}
 	
 }

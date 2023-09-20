@@ -18,7 +18,7 @@ import com.service.spring.service.AdminService;
 import com.service.spring.vo.Contents;
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -81,6 +81,16 @@ public class AdminController {
 		try {
 			List<Map<String, Object>> users = adminService.userList();
 			return new ResponseEntity(users, HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@GetMapping("/getWriterName/{writerId}")
+	public ResponseEntity getWriterName(@PathVariable int writerId) throws Exception{
+		try {
+			String name = adminService.getWriterName(writerId);
+			return new ResponseEntity(name, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
