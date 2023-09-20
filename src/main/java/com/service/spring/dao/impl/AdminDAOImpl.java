@@ -46,5 +46,11 @@ public class AdminDAOImpl implements AdminDAO {
 	public List<Map<String, Object>> userList() throws Exception {
 		return sqlSession.selectList(NS + "userList");
 	}
+
+	@Override
+	public String getWriterName(int writerId) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(NS + "getWriterName", writerId);
+	}
 	
 }

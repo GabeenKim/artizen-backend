@@ -12,4 +12,5 @@ public interface AdminDAO {
 	List<Contents> okList() throws Exception;
 	List<Contents> failList() throws Exception;
 	List<Map<String,Object>> userList() throws Exception;
+	String getWriterName(int writerId) throws Exception;
 }
