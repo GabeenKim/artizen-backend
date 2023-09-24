@@ -19,7 +19,7 @@ import com.service.spring.service.ReviewsService;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.Reviews;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
@@ -31,6 +31,7 @@ public class ReviewController {
 	/* [리뷰 작성] :: P14 */
 	@PostMapping("/addReview")
 	public ResponseEntity addReview(@RequestBody ReviewDTO req) {
+		System.out.println(req.getUserId()+", "+ req.getContentId()+", "+req.getReview()+", "+req.getScore());
 		try {
 			reviewsService.addReview(req.getUserId()
 					, req.getContentId()
@@ -39,6 +40,7 @@ public class ReviewController {
 			
 			return new ResponseEntity(HttpStatus.OK);
 		}catch(Exception e) {
+			System.out.println(e);
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 	}
@@ -54,5 +56,17 @@ public class ReviewController {
 		}
 	}
 
-	
+    /* [콘텐츠별 리뷰 목록] :: */
+    @GetMapping("/showContentReview/{contentId}")
+    public ResponseEntity showContentReview(@PathVariable int contentId) {
+        try {
+        	System.out.println(contentId);
+            HashMap<String, Object> result = reviewsService.showContentReview(contentId);
+            System.out.println(result);
+            return new ResponseEntity(result, HttpStatus.OK);
+        }catch(Exception e) {
+        	System.out.println(e);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+    }
 }

@@ -2,13 +2,16 @@ package com.service.spring.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.service.spring.dto.ContentIdRequestDTO;
+import com.service.spring.dto.MultipartDTO;
 import com.service.spring.vo.Contents;
 
 
 public interface ContentsService {
-	int addSupportContents(Contents contents)throws Exception;
-	int addFundingContents(Contents contents) throws Exception;
+	int addSupportContents(MultipartDTO dto, HttpServletRequest request)throws Exception;
+	int addFundingContents(MultipartDTO dto, HttpServletRequest request) throws Exception;
 	int addAdminContents(int contentId) throws Exception;
 	int updateContents(Contents contents) throws Exception;
 	int deleteContents(int contentId) throws Exception;
@@ -29,6 +32,6 @@ public interface ContentsService {
 
 	List<Contents> showAllSupportContents() throws Exception;
 	List<Contents> showAllFundingContents() throws Exception;
-
+	int showContentIdentity(int contentId) throws Exception;
 
 }

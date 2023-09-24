@@ -1,6 +1,7 @@
 package com.service.spring.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,18 @@ public class TicketServiceImpl implements TicketService{
 	private TicketDAO ticketDAO; 
 	
 	@Override
-	public List<Ticket> showMyTickets(User user) {
+	public List<Map<String, Object>> showMyTickets(User user) {
 		return ticketDAO.showMyTickets(user);
 	}
 
 	@Override
 	public void sendTicket(int sendUserId, int receiveUserId, int ticketId) {
 		ticketDAO.sendTicket(sendUserId, receiveUserId, ticketId);
+	}
+	
+	@Override
+	public void addTicket(Ticket ticket) {
+		ticketDAO.addTicket(ticket);
 	}
 
 }

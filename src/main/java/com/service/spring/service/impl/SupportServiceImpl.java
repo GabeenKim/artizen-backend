@@ -81,12 +81,11 @@ public class SupportServiceImpl implements SupportService{
 		List<Support> support = supportDAO.showFundingUser(contentId);
 		Contents content = contentDAO.findContentsById(contentId);
 		int profits = (int) Math.round((content.getContentSum() - content.getTarget()) + 3000 / content.getContentSum() * 100)  ;
-		System.out.println(profits);
 		for(User u : users) {
 			for(Support s : support) {
 				if(s.getUserId() == u.getUserId()) {
 					int newPrice = (int) Math.round(s.getPrice() * profits);
-					System.out.println(newPrice);
+					
 					u.getUserInfo().setBalance(newPrice);
 					int infoId = u.getUserInfo().getInfoId();
 					HashMap<String, Object> map = new HashMap<>();
@@ -119,8 +118,6 @@ public class SupportServiceImpl implements SupportService{
     }
 	@Override
 	public List<Support> showSupportRank() throws Exception {
-		System.out.println(supportDAO.showSupportRank());
-		System.out.println(supportDAO.showSupportRank());
 		return supportDAO.showSupportRank();
 	}
 

@@ -1,7 +1,14 @@
 package com.service.spring.dto;
 
+import java.sql.Date;
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
+
+import com.service.spring.vo.FundingContents;
+import com.service.spring.vo.Gift;
+import com.service.spring.vo.SupportContents;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +21,18 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class MultipartDTO {
-	private int userId;
-	private String name;
-	private MultipartFile uploadFile; 
+    int contentSum;
+    String contentName;
+    int target;
+    String category;
+    Date startDay;
+    Date endDay;
+    int likes;
+    int isAccepted;
+    int writerId;
+    SupportContents supportContents;
+    FundingContents fundingContents;
+    List<Gift> gift;
+    private String imageUrl; 
 }
+

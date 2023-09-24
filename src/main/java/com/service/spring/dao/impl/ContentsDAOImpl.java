@@ -10,6 +10,7 @@ import com.service.spring.dao.ContentsDAO;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.FundingContents;
 import com.service.spring.vo.Gift;
+import com.service.spring.vo.Image;
 import com.service.spring.vo.SupportContents;
 
 @Repository
@@ -128,6 +129,16 @@ public class ContentsDAOImpl implements ContentsDAO{
 	@Override
 	public int updateGift(Gift gift) throws Exception {
 		return sqlSession.update(NS+"updateGift", gift);
+	}
+
+	@Override
+	public int addImage(Image image) throws Exception {
+		return sqlSession.insert(NS+"addImage", image);
+	}
+
+	@Override
+	public int showContentIdentity(int contentId) throws Exception {
+		return sqlSession.selectOne(NS + "showContentIdentity", contentId);
 	}
 
 

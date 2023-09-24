@@ -3,11 +3,67 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="sql.admin.mapper">
-	
-	<!-- 승인 전 프로젝트 리스트 불러오기 :: 완료, 후원 && 펀딩 포함 -->
-	<select id="checkList" resultType="contents">
-        select * from contents where is_accepted = 0
-    </select> 
+
+	<resultMap id="ContentsResultMap" type="Contents">
+    <id property="contentId" column="content_id"/>
+    <result property="contentName" column="content_name"/>
+    <result property ="contentSum" column = "content_sum"/>
+    <result property="target" column="target"/>
+    <result property="category" column="category"/>
+    <result property="startDay" column="start_day"/>
+    <result property="endDay" column="end_day"/>
+    <result property= "likes" column= "likes"/>
+    <result property="writerId" column="writer_id"/>
+    <result property= "isAccepted" column= "is_accepted"/>
+
+    <association property = "fundingContents" resultMap = "FundingContentsResultMap"/>
+    <association property= "supportContents" resultMap= "SupportContentsResultMap"/> 
+    <association property = "gift" resultMap="giftResultMap"/>
+    <association property = "image" resultMap="imageResultMap"/>
+    </resultMap>
+
+    <resultMap id= "SupportContentsResultMap" type= "SupportContents">
+      <id property= "scId" column= "sc_id"/> 
+      <id property= "contentId" column= "content_id"/> 
+      <result property= "detail" column =  "detail"/> 
+      <result property = "teamDetail" column = "team_detail"/>
+      <result property =  "planDetail" column = "plan_detail"/>
+    </resultMap>
+
+    <resultMap id= "FundingContentsResultMap" type= "FundingContents">
+      <id property= "fundingId" column= "funding_id"/> 
+      <id property= "contentId" column= "content_id"/> 
+      <result property= "detail" column =  "detail"/> 
+      <result property = "transaction" column = "transaction"/>
+      <result property =  "productionCost" column = "production_cost"/>
+      <result property =  "purpose" column = "purpose"/>
+      <result property =  "minInvest" column = "min_invest"/>
+    </resultMap>
+
+    <resultMap id="giftResultMap" type="gift" >
+        <id property="giftId" column="gift_id"/>
+        <id property= "contentId" column= "content_id"/> 
+        <result property= "criterion" column =  "criterion"/> 
+        <result property= "giftList" column =  "gift_list"/> 
+        <result property= "ticketCnt" column =  "ticket_cnt"/> 
+    </resultMap>
+
+    <resultMap id="imageResultMap" type="image" >
+        <id property="imageId" column="image_id"/>
+        <id property= "contentId" column= "content_id"/> 
+        <result property= "imageUrl" column ="image_url"/> 
+        <result property= "imageName" column ="image_name"/> 
+    </resultMap>
+
+	<!-- 승인 전 프로젝트 리스트 불러오기 :: 완료, 후원 && 펀딩 포함 -->    
+    <select id="checkList" resultMap="ContentsResultMap">
+     SELECT c.content_id, c.content_sum, c.content_name, c.target, c.category, 
+            c.start_day, c.end_day, c.likes, c.is_accepted, c.writer_id,
+            i.image_id, i.image_url, i.image_name
+    FROM contents c
+    JOIN image i ON(c.content_id = i.content_id)
+        WHERE c.is_accepted = 0
+    </select>
     
     <!-- 프로젝트 승인 :: 완료 -->
     <update id="ok" parameterType="int">
@@ -44,7 +100,7 @@
 	<!-- 펀딩만 포함 -->
 	<select id="okList" resultMap="contentsWithFundingDetail">
 		<![CDATA[
-			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.category, c.start_day, c.end_day, c.writer_id,
+			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.category, c.start_day, c.end_day, c.writer_id, c.category,
 			f.funding_id, f.detail, f.transaction, f.production_cost, f.purpose, f.min_invest FROM contents c JOIN funding_contents f ON c.content_id = f.content_id   
 			WHERE c.end_day < TO_CHAR(SYSDATE, 'YYYYMMDD') AND c.content_sum > c.target
 			]]>
@@ -52,9 +108,9 @@
 
 	<!-- 환불 대상 프로젝트 가져오기 :: 완료 [1. 마감일이 현재 날짜 기준으로 넘겼고, 2. content_sum이 target값을 넘지 않았을 때]-->
 	<!-- 펀딩만 포함 -->
-	<select id="failList" resultType="contents">
+	<select id="failList" resultMap="contentsWithFundingDetail">
 		<![CDATA[
-			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.start_day, c.end_day, c.writer_id,
+			SELECT c.content_id, c.content_name, c.content_sum, c.target, c.start_day, c.end_day, c.writer_id, c.category,
 			f.funding_id, f.detail, f.transaction, f.production_cost, f.purpose, f.min_invest FROM contents c JOIN funding_contents f ON c.content_id = f.content_id   
 			WHERE c.end_day < TO_CHAR(SYSDATE, 'YYYYMMDD') AND c.content_sum < c.target
 			]]>
