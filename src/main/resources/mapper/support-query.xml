@@ -89,9 +89,11 @@
 			SELECT 
 			    c.content_id, 
 			    c.content_name,
+			    c.start_day,
 			    c.end_day,
 			    c.content_sum,
 			    c.target,
+			    c.category,
 			    s.support_id,
 			    s.user_id,
 			    i.image_id,

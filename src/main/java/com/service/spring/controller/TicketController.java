@@ -22,7 +22,7 @@ import com.service.spring.service.TicketService;
 import com.service.spring.vo.Ticket;
 import com.service.spring.vo.User;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/ticket")
 public class TicketController {
@@ -33,9 +33,11 @@ public class TicketController {
 	@GetMapping("/{userId}")
 	public ResponseEntity showMyTicket(@PathVariable int userId) {
 		try {
-			List<Ticket> tickets = ticketService.showMyTickets(new User(userId,0,null,null,null,null,null,null));
+			List<Map<String, Object>> tickets = ticketService.showMyTickets(new User(userId,0,null,null,null,null,null,null));
+			System.out.println(tickets);
 			return new ResponseEntity(tickets, HttpStatus.ACCEPTED);
 		} catch(Exception e) {
+			System.out.println(e);
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 	}

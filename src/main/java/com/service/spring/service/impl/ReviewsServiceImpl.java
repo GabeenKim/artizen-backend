@@ -1,5 +1,6 @@
 package com.service.spring.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,12 @@ public class ReviewsServiceImpl implements ReviewsService{
 	public List<Reviews> showReview(int writerId) {
 		return reviewsDAO.showReview(writerId);
 	}
-
+	
+    @Override
+    public HashMap<String, Object> showContentReview(int contentId) {
+        HashMap<String, Object> map = new HashMap();
+        map.put("reviewInfo", reviewsDAO.showContentReviewAvg(contentId));
+        map.put("reviews", reviewsDAO.showContentReview(contentId));
+        return map;
+    }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.service.spring.service.SupportService;
+import com.service.spring.service.TicketService;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.Support;
+import com.service.spring.vo.Ticket;
 import com.service.spring.vo.User;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/funding")
 public class SupportController {
@@ -27,10 +31,14 @@ public class SupportController {
 	@Autowired
 	private SupportService supportService;
 	
+	@Autowired
+	private TicketService ticketService;
+	
 	@PostMapping("/addFunding")  //supportId 주자..
 	public int addFunding(@RequestBody Support support) throws Exception{
-		return supportService.addFunding(support);
-		
+		int i = supportService.addFunding(support);
+		ticketService.addTicket(new Ticket(support.getUserId(),support.getContentId()));
+		return i;
 	}
 	
 	@DeleteMapping("/deleteFunding/{supportId}")

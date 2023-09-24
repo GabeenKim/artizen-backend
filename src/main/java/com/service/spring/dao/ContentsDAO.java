@@ -2,9 +2,11 @@ package com.service.spring.dao;
 
 import java.util.List;
 
+
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.FundingContents;
 import com.service.spring.vo.Gift;
+import com.service.spring.vo.Image;
 import com.service.spring.vo.SupportContents;
 
 public interface ContentsDAO {
@@ -35,4 +37,7 @@ public interface ContentsDAO {
 
 	int addGift(Gift gift) throws Exception;
 	int updateGift(Gift gift) throws Exception;
+	
+	int addImage(Image image)throws Exception;
+	int showContentIdentity(int contentId) throws Exception;
 }

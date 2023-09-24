@@ -17,4 +17,8 @@ public class Ticket {
 	private int userId;
 	private int contentId;
 	
+	public Ticket(int userId, int contentId) {
+		this.userId = userId;
+		this.contentId = contentId;
+	}
 }

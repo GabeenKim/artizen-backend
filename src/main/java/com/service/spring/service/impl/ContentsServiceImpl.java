@@ -1,18 +1,25 @@
 package com.service.spring.service.impl;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.service.spring.dao.ContentsDAO;
 import com.service.spring.dto.ContentIdRequestDTO;
+import com.service.spring.dto.MultipartDTO;
 import com.service.spring.service.ContentsService;
+import com.service.spring.service.ImageService;
 import com.service.spring.vo.Contents;
 import com.service.spring.vo.FundingContents;
 import com.service.spring.vo.Gift;
+import com.service.spring.vo.Image;
 import com.service.spring.vo.SupportContents;
 
 @Service
@@ -21,38 +28,73 @@ public class ContentsServiceImpl implements ContentsService{
 	@Autowired
 	private ContentsDAO contentsDAO;
 	
+	@Autowired
+	private ImageService imageService;
+	
+	
 	@Override
-	public int addSupportContents(Contents contents) throws Exception {
+	public int addSupportContents(MultipartDTO dto, HttpServletRequest request) throws Exception {
+		Contents contents = Contents.builder()
+				 .contentSum(dto.getContentSum())
+		            .contentName(dto.getContentName())
+		            .likes(dto.getLikes())
+		            .target(dto.getTarget())
+		            .category(dto.getCategory())
+		            .startDay(dto.getStartDay())
+		            .endDay(dto.getEndDay())
+		            .writerId(dto.getWriterId()) 
+		            .build();
+		
 		contentsDAO.addContents(contents);
 		int id = contentsDAO.findContentsByName(contents.getContentName()).getContentId();
-		SupportContents sc = contents.getSupportContents();
+		SupportContents sc = dto.getSupportContents();
 		sc.setContentId(id);
-		
-		List<Gift> gifts = contents.getGift();
+
+		List<Gift> gifts = dto.getGift();
 
 		for(Gift g : gifts) {
 			g.setContentId(id);
 			contentsDAO.addGift(g);
 		}
 		
+		Image images = new Image();
+		images.setContentId(id);
+		images.setImageUrl(dto.getImageUrl());
+
+		contentsDAO.addImage(images);
 		return contentsDAO.addSupportContents(sc);
 	}
 	
 	@Override
-	public int addFundingContents(Contents contents) throws Exception {
+	public int addFundingContents(MultipartDTO dto, HttpServletRequest request) throws Exception {
+		Contents contents = Contents.builder()
+				 .contentSum(dto.getContentSum())
+		            .contentName(dto.getContentName())
+		            .likes(dto.getLikes())
+		            .target(dto.getTarget())
+		            .category(dto.getCategory())
+		            .startDay(dto.getStartDay())
+		            .endDay(dto.getEndDay())
+		            .writerId(dto.getWriterId()) 
+		            .build();
+		
 		contentsDAO.addContents(contents);
 		int id = contentsDAO.findContentsByName(contents.getContentName()).getContentId();
-		System.out.println(id);
-		FundingContents fc = contents.getFundingContents();
+		FundingContents fc = dto.getFundingContents();
 		fc.setContentId(id);
 		
-		List<Gift> gifts = contents.getGift();
+		
+		List<Gift> gifts = dto.getGift();
 
 		for(Gift g : gifts) {
 			g.setContentId(id);
 			contentsDAO.addGift(g);
 		}
-		
+		Image images = new Image();
+		images.setContentId(id);
+		images.setImageUrl(dto.getImageUrl());
+
+		contentsDAO.addImage(images);
 		return contentsDAO.addFundingContents(fc);
 		
 	}
@@ -166,6 +208,11 @@ public class ContentsServiceImpl implements ContentsService{
 	@Override
 	public List<Contents> showAllFundingContents() throws Exception {
 		return contentsDAO.showAllFundingContents();
+	}
+
+	@Override
+	public int showContentIdentity(int contentId) throws Exception {
+		return contentsDAO.showContentIdentity(contentId);
 	}
 
 	

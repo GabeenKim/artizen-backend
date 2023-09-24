@@ -18,6 +18,20 @@
 		WHERE c.writer_id = #{VALUE}			
 	</select>
 	 
+    <select id="showContentReview" parameterType="int" resultType="hashmap">
+        SELECT review_id, review, score
+        FROM reviews r JOIN contents c ON(r.content_id = c.content_id)
+        WHERE c.content_id = #{VALUE}
+    </select>
+    
+    <select id="showContentReviewAvg" parameterType="int" resultType="hashmap">
+        SELECT r2.content_id, r2.avg_score, c2.content_name
+        FROM
+        (SELECT r.content_id content_id, sum(r.score)/count(r.score) avg_score
+        FROM reviews r JOIN contents c ON(r.content_id = c.content_id)
+        WHERE c.content_id = #{VALUE}
+        GROUP BY r.content_id) r2 JOIN contents c2 ON (r2.content_id = c2.content_id)
+    </select>
 </mapper>
 
 

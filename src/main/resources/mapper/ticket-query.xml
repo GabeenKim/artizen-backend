@@ -5,11 +5,18 @@
 <mapper namespace="sql.ticket.mapper">	
 
 	<select id="showMyTickets" parameterType="user" resultType="HashMap">
-		SELECT
+<!-- 		SELECT
 		t.ticket_id AS ticketId, c.content_name AS contentName, c.start_day AS startDay, c.end_day AS endDay
 		FROM contents c
 		JOIN ticket t ON(c.content_id=t.content_id)
-		WHERE t.user_id = #{userId}
+		WHERE t.user_id = #{userId} -->
+		SELECT t2.ticketId, t2.contentName, t2.startDay, t2.endDay, i.image_url
+		FROM (SELECT
+		t.ticket_id AS ticketId, c.content_id AS contentId, c.content_name AS contentName, c.start_day AS startDay, c.end_day AS endDay
+		FROM contents c
+		JOIN ticket t ON(c.content_id=t.content_id)
+		WHERE t.user_id = #{userId}) t2 
+		JOIN image i ON (t2.contentId = i.content_id)
 	</select>
 		
 	<update id="sendTicket" parameterType="hashmap">
@@ -17,6 +24,12 @@
 		set user_id = #{receiveUserId} 
 		WHERE user_id = #{sendUserId} AND ticket_id = #{ticketId}
 	</update>
+	
+	<insert id="addTicket" parameterType="ticket">
+		INSERT INTO ticket
+		(ticket_id, user_id ,content_id)
+		VALUES(ticket_seq.nextVal, #{userId}, #{contentId})
+	</insert>
 	
 </mapper>
 

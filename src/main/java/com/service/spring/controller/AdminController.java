@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.service.spring.dao.AdminDAO;
 import com.service.spring.service.AdminService;
 import com.service.spring.vo.Contents;
+import com.service.spring.vo.User;
+import com.service.spring.vo.UserInfo;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -50,6 +52,7 @@ public class AdminController {
 	public ResponseEntity checkList() throws Exception{
 		try {
 			List<Contents> contents = adminService.checkList();
+			System.out.println(contents);
 			return new ResponseEntity(contents, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -89,8 +92,16 @@ public class AdminController {
 	@GetMapping("/getWriterName/{writerId}")
 	public ResponseEntity getWriterName(@PathVariable int writerId) throws Exception{
 		try {
-			String name = adminService.getWriterName(writerId);
-			return new ResponseEntity(name, HttpStatus.OK);
+			UserInfo userInfo = new UserInfo(0,
+					adminService.getWriterName(writerId),
+					null,
+					null,
+					null,
+					null,
+					null,
+					0);
+			
+			return new ResponseEntity(userInfo, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}

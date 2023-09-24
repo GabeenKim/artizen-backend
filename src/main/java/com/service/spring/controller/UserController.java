@@ -24,7 +24,7 @@ import com.service.spring.vo.User;
 import com.service.spring.vo.UserInfo;
 import com.service.spring.vo.Writer;
 
-@CrossOrigin(origins =  "*",allowedHeaders = "*" )
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class UserController {
 
@@ -33,11 +33,12 @@ public class UserController {
 	
 	@PostMapping("/account/login")
 	public ResponseEntity login(@RequestBody UserInfo userInfo) {
-//		System.out.println(userInfo);
+//		System.out.println(userInfo.getInfoId());
 
 		try{
 			UserInfo loginUser = userService.login(userInfo);
 			int identity = userService.showIdentity(loginUser.getInfoId());
+			System.out.println(identity);
 			int id = 0;
 			if(identity == 1) { //유저
 				System.out.println("hihi");
@@ -57,6 +58,7 @@ public class UserController {
 				return new ResponseEntity(id, HttpStatus.OK);
 			}
 		}catch(Exception e) {
+			System.out.println(e);
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 	}

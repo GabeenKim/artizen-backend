@@ -34,4 +34,13 @@ public class ReviewsDAOImpl implements ReviewsDAO{
 		return sqlSession.selectList(NS + "showReview",writerId);
 	}
 
+	@Override
+	public List<HashMap<String, Object>> showContentReview(int contentId) {
+	    return sqlSession.selectList(NS + "showContentReview",contentId);
+	}
+	
+	 @Override
+	 public HashMap<String, Object> showContentReviewAvg(int contentId) {
+	    return sqlSession.selectOne(NS + "showContentReviewAvg",contentId);
+	 }
 }

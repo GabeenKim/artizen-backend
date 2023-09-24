@@ -21,7 +21,7 @@ public class TicketDAOImpl implements TicketDAO {
 	private static String NS = "sql.ticket.mapper.";
 	
 	@Override
-	public List<Ticket> showMyTickets(User user) {
+	public List<Map<String, Object>> showMyTickets(User user) {
 		return sqlSession.selectList(NS + "showMyTickets",user);
 	}
 
@@ -32,6 +32,11 @@ public class TicketDAOImpl implements TicketDAO {
 		map.put("sendUserId",sendUserId);
 		map.put("ticketId",ticketId);
 		sqlSession.update(NS + "sendTicket",map);
+	}
+
+	@Override
+	public void addTicket(Ticket ticket){
+		sqlSession.insert(NS + "addTicket", ticket);
 	}
 
 }
